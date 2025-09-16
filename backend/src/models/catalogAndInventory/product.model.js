@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
+const generateId = require("../../utils/generateId");
 
 const productSchema = mongoose.Schema({
+  productId: {
+    type: String,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,
@@ -49,6 +54,13 @@ const productSchema = mongoose.Schema({
     },
   },
 }, { timestamps: true });
+
+productSchema.pre('save', function(next) {
+   if (!this.productId) {
+    this.productId = generateId('PROD');
+  }
+  next();
+});
 
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;

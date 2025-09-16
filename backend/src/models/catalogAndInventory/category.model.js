@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
+const generateId = require("../../utils/generateId");
 
 const categorySchema = new mongoose.Schema({
+  categoryId: {
+    type: String,
+    unique: true,
+  },
   name: {
     type: String,
     required: [true, "Category name is required"],
@@ -27,6 +32,13 @@ const categorySchema = new mongoose.Schema({
     },
   },
 }, { timestamps: true });
+
+categorySchema.pre('save', function(next) {
+   if (!this.categoryId) {
+    this.categoryId = generateId('CAT');
+  }
+  next();
+});
 
 const Category = mongoose.model("Category", categorySchema);
 module.exports = Category;

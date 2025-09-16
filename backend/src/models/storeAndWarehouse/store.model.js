@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
+const generateId = require('../../utils/generateId');
 
 const storeSchema = mongoose.Schema({
+  storeId: {
+    type: String,
+    unique: true
+  },
   name: {
     type: String,
     required: true,
@@ -31,6 +36,13 @@ const storeSchema = mongoose.Schema({
     sunday: { type: String }
   }
 }, { timestamps: true });
+
+storeSchema.pre('save', function(next) {
+    if (!this.storeId) {
+      this.storeId = generateId('STORE');
+    }
+    next();
+});
 
 const Store = mongoose.model("Store", storeSchema);
 module.exports = Store;

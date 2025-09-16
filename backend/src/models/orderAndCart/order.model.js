@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
+const generateId = require("../../utils/generateId");
 
 const orderSchema = mongoose.Schema(
   {
+    orderId:{
+      type: String,
+      unique: true
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -52,6 +57,12 @@ const orderSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+orderSchema.pre('save', function(next) {
+    if (!this.orderId) {
+      this.orderId = generateId('ORD');
+    }
+    next();
+});
 
 const Order = mongoose.model("Order", orderSchema);
 module.exports = Order;
