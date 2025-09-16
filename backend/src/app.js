@@ -1,2 +1,17 @@
-const express = require("express")
-const app = express()
+const express = require("express");
+const connectDB = require("./config/database");
+const app = express();
+
+
+
+connectDB().then(()=>{
+  console.log("Database connection established ...");
+  app.listen("7777", () => {
+  console.log("app successfully runing in the port 7777");
+});
+}).catch(()=>{
+  console.log("failed to connect db");
+})
+
+
+
