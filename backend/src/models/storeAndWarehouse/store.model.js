@@ -16,6 +16,54 @@ const storeSchema = new mongoose.Schema({
     minlength: 10,
     unique: true,
   },
+  description: {
+    type: String,
+    trim: true,
+    maxlength: 500,
+    default: ''
+  },
+  logo: {
+    type: String,
+    default: null,
+    validate(value) {
+      if (validator.isURL(value) === false) {
+        throw new Error("Invalid URL for logo image");
+      }
+    },
+  },
+  bannerImage: {
+    type: String,
+    default: null,
+    validate(value) {
+      if (validator.isURL(value) === false) {
+        throw new Error("Invalid URL for banner image");
+      }
+    },
+  },  
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+    trim:true,
+    validate(value){
+      if(validator.isMobilePhone(value) === false){
+        throw new Error('Invalid phone number');
+      }
+    }
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim:true,
+    validate(value){
+      if(!validator.isEmail(value)){
+        throw new Error("Invalid email address")
+      }
+    }
+  },
+
+
   address: {
     street: { type: String, required: true , maxlength:100, minlength:10},
     city: { type: String , maxlength:50, minlength:2},
@@ -27,18 +75,14 @@ const storeSchema = new mongoose.Schema({
     lat: { type: Number },
     lng: { type: Number }
   },
-  contact: {
-    phone: { type: String , validate(value){
-      if(validator.isMobilePhone(value) === false){
-        throw new Error('Invalid phone number');
-      }
-    }},
-    email: { type: String , validate(value){
-      if(validator.isEmail(value) === false){
-        throw new Error('Invalid email address');
-      }
-    }},
+  isActive: {
+    type: Boolean,
+    default: true,
+    required: true,
   },
+ 
+
+
   openingHours: {
     monday: { type: String },
     tuesday: { type: String },

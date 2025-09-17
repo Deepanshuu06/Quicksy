@@ -2,8 +2,9 @@ const express = require("express");
 const connectDB = require("./config/database");
 
 const app = express();
-const PORT =  7777;
-const cors = require('cors');
+const PORT = 7777;
+const cors = require("cors");
+const authRoutes = require("./routes/auth.routes");
 
 app.use(
   cors({
@@ -12,13 +13,9 @@ app.use(
   })
 );
 
-
 app.use(express.json());
 
-
-
-
-
+app.use("/api/auth", authRoutes);
 
 async function startServer() {
   try {
