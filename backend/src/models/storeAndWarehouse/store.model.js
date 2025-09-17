@@ -81,8 +81,6 @@ const storeSchema = new mongoose.Schema({
     required: true,
   },
  
-
-
   openingHours: {
     monday: { type: String },
     tuesday: { type: String },

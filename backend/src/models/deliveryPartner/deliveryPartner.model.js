@@ -84,6 +84,25 @@ const deliveryPartnerSchema = new mongoose.Schema(
       lat: { type: Number },
       lng: { type: Number },
     },
+    currentOrder: {
+        orderId: {
+            type: String,
+            default: null
+        },
+        pickupLocation: {
+            lat: { type: Number },
+            lng: { type: Number }
+        },
+        dropLocation: {
+            lat: { type: Number },
+            lng: { type: Number }
+        },
+        status: {
+            type: String,
+            enum: ["pending", "picked-up", "delivered"],
+            default: "pending"
+        }
+    },
     availabilityStatus: {
       type: String,
       enum: ["available", "unavailable", "on-duty"],
