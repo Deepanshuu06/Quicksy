@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['customer', 'admin'],
     default: 'customer',
+    required: true,
   },
   walletBalance: {
     type: Number,
