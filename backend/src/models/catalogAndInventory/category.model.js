@@ -12,6 +12,7 @@ const categorySchema = new mongoose.Schema({
     unique: true,
     trim: true,
     minlength: [3, "Category name must be at least 3 characters"],
+    maxlength: [50, "Category name must be at most 50 characters"],
   },
   slug: {
     type: String,
@@ -19,6 +20,9 @@ const categorySchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
     trim: true,
+    minlength: [3, "Slug must be at least 3 characters"],
+    maxlength: [50, "Slug must be at most 50 characters"],
+    match: [/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug can only contain lowercase letters, numbers, and hyphens'],
   },
   image: {
     type: String,
@@ -31,6 +35,10 @@ const categorySchema = new mongoose.Schema({
       message: props => `${props.value} is not a valid image URL`,
     },
   },
+  products: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+  }],
 }, { timestamps: true });
 
 categorySchema.pre('save', function(next) {

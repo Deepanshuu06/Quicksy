@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const generateId = require("../../utils/generateId");
+const { trim } = require("validator");
 
 const productSchema = mongoose.Schema({
   productId: {
@@ -10,10 +11,17 @@ const productSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    minlength: 3,
+    maxlength: 100,
+    unique: true,
   },
   description: {
     type: String,
     default: "",
+    trim: true,
+    minlength: 10,
+    maxlength: 500,
+    
   },
   price: {
     type: Number,
@@ -24,10 +32,15 @@ const productSchema = mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 20,
   },
   stockQuantity: {
     type: Number,
     default: 0,
+    required: true,
+
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
@@ -37,6 +50,8 @@ const productSchema = mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true,
+    required: true,
+    
   },
   attributes: {
     weight: { type: String },

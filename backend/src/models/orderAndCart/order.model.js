@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const generateId = require("../../utils/generateId");
 
-const orderSchema = mongoose.Schema(
+const orderSchema = new mongoose.Schema(
   {
     orderId:{
       type: String,
@@ -28,6 +28,7 @@ const orderSchema = mongoose.Schema(
           type: Number,
           required: true,
           min: 1,
+          max: 20,
         },
       },
     ],
@@ -49,10 +50,12 @@ const orderSchema = mongoose.Schema(
     deliveryPartner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DeliveryPartner",
+      required: false,
     },
     deliveryAddress: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",
+      required: true,
     },
   },
   { timestamps: true }

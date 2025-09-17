@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const generateId = require('../../utils/generateId');
+const validator = require('validator');
 
-const storeSchema = mongoose.Schema({
+
+const storeSchema = new mongoose.Schema({
   storeId: {
     type: String,
     unique: true
@@ -9,22 +11,33 @@ const storeSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    maxlength: 100,
+    minlength: 10,
+    unique: true,
   },
   address: {
-    street: { type: String, required: true },
-    city: { type: String },
-    state: { type: String },
-    postalCode: { type: String },
-    country: { type: String, default: 'Unknown' }
+    street: { type: String, required: true , maxlength:100, minlength:10},
+    city: { type: String , maxlength:50, minlength:2},
+    state: { type: String , maxlength:50, minlength:2 },
+    postalCode: { type: String , maxlength:8, minlength:6 , required: true},
+    country: { type: String, default: 'India' , required: true}
   },
   geolocation: {
     lat: { type: Number },
     lng: { type: Number }
   },
   contact: {
-    phone: { type: String },
-    email: { type: String }
+    phone: { type: String , validate(value){
+      if(validator.isMobilePhone(value) === false){
+        throw new Error('Invalid phone number');
+      }
+    }},
+    email: { type: String , validate(value){
+      if(validator.isEmail(value) === false){
+        throw new Error('Invalid email address');
+      }
+    }},
   },
   openingHours: {
     monday: { type: String },
