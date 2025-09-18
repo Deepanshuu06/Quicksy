@@ -1,50 +1,59 @@
 const User = require("../models/userAndAccess/user.model");
-const loginValidation = require("../utils/authValidation");
-const signupValidation = require("../utils/authValidation");
+const { ApiError } = require("../utils/apiError");
+const { ApiResponse } = require("../utils/ApiResponse");
+const loginValidation = require("../utils/loginValidation");
+const signupValidation = require("../utils/signupValidation");
 const bcrypt = require("bcrypt");
 
-exports.register = async (req, res) => {
+exports.register = async (req, res , next) => {
   const { name, phone, email, password } = req.body;
   try {
+   
     signupValidation(req);
     const existingEmail = await User.findOne({ email: email });
     if (existingEmail) {
-      return res.status(400).send("Email already in use");
+      throw new ApiError(400, "Email already in use");
     }
     const existingPhone = await User.findOne({ phone: phone });
     if (existingPhone) {
-      return res.status(400).send("Phone number already in use");
+      throw new ApiError(400, "Phone number already in use");
     }
     const hashpassword = await bcrypt.hash(password, 10);
-   
-    const user = new User({ name, phone, email, password:hashpassword});
+
+    const user = new User({ name, phone, email, password: hashpassword });
     await user.save();
-    res.send("User registered successfully");
+    const response = new ApiResponse(200, "Login Successfull")
+    res.status(200).json(response)
   } catch (error) {
-    res.status(400).send("Error in user registration: " + error.message);
+    next(error);
   }
 };
-exports.login = async (req, res) => {
-  const {email , password} = req.body;
-try {
-    loginValidation(req);
-    const user = await User.findOne({email:email});
-    if(!user){
-        throw new Error ("Invalid Credentials")
-    }
-     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-     if(isPasswordValid){
-        res.send("login successfull")
-     }else{
-        throw new Error ("Invalid Credentials")
-     }
-    
-} catch (error) {
-    throw new Error ("Error " + error.message)
-}
+
+exports.login = async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+
+    loginValidation(req);
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw new ApiError(401, "Invalid credentials");
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (isPasswordValid) {
+      const response = new ApiResponse(200, "Login successful", {
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+      });
+      res.status(200).json(response);
+    } else {
+      throw new ApiError(401, "Invalid credentials");
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.logout = async (req, res) => {};
-
-
