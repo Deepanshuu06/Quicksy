@@ -4,6 +4,7 @@ const { ApiResponse } = require("../utils/ApiResponse");
 const loginValidation = require("../utils/loginValidation");
 const signupValidation = require("../utils/signupValidation");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res , next) => {
   const { name, phone, email, password } = req.body;
@@ -47,6 +48,9 @@ exports.login = async (req, res, next) => {
         name: user.name,
         email: user.email,
       });
+      const token = await jwt.sign({_id:user._id}, process.env.JWT_SECRET)
+
+      res.cookie("token",token)
       res.status(200).json(response);
     } else {
       throw new ApiError(401, "Invalid credentials");

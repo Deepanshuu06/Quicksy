@@ -4,8 +4,10 @@ const connectDB = require("./config/database");
 const app = express();
 const PORT = 7777;
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.routes");
 const errHandler = require("./middleware/errorHandler");
+
 
 app.use(
   cors({
@@ -16,6 +18,7 @@ app.use(
 
 app.use(express.json());
 app.use(errHandler); 
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 
