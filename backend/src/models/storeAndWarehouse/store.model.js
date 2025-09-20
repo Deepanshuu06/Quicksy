@@ -17,28 +17,30 @@ const storeSchema = new mongoose.Schema({
     unique: true,
   },
   description: {
+
     type: String,
     trim: true,
     maxlength: 500,
+    required: true,
     default: ''
   },
   logo: {
     type: String,
     default: null,
-    validate(value) {
-      if (validator.isURL(value) === false) {
-        throw new Error("Invalid URL for logo image");
-      }
-    },
+    // validate(value) {
+    //   if (validator.isURL(value) === false) {
+    //     throw new Error("Invalid URL for logo image");
+    //   }
+    // },
   },
   bannerImage: {
     type: String,
     default: null,
-    validate(value) {
-      if (validator.isURL(value) === false) {
-        throw new Error("Invalid URL for banner image");
-      }
-    },
+    // validate(value) {
+    //   if (validator.isURL(value) === false) {
+    //     throw new Error("Invalid URL for banner image");
+    //   }
+    // },
   },  
   phone: {
     type: String,
@@ -77,7 +79,7 @@ const storeSchema = new mongoose.Schema({
   },
   isActive: {
     type: Boolean,
-    default: true,
+    default: false,
     required: true,
   },
  

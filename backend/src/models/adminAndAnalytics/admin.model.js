@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const generateId = require('../../utils/generateId');
 
 const adminSchema = new mongoose.Schema({
     adminId: {
         type: String,
-        required: true,
         unique: true
     },
     email: {
@@ -25,12 +25,33 @@ const adminSchema = new mongoose.Schema({
         maxlength: 50,
         trim: true
     },
+
+    phone: {
+        type: String,
+        required: true,
+        unique: true,
+        trim:true,
+        validate(value){
+          if(validator.isMobilePhone(value) === false){
+            throw new Error('Invalid phone number');
+          }
+        }
+    },
+
+    store: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Store',
+        required: true
+    },
+
     role: {
         type: String,
         enum: ['superadmin', 'admin'],
-        default: 'admin'
+        default: 'admin',
+        required:true
     },
-    passwordHash: {
+
+    password: {
         type: String,
         required: true,
     },
@@ -39,6 +60,13 @@ const adminSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
+adminSchema.pre("save",function(next){
+    if(!this.adminId){
+        this.adminId = generateId("ADMN")
+    }
+    next()
+})
 
 const Admin = mongoose.model('Admin', adminSchema);
 module.exports = Admin;
