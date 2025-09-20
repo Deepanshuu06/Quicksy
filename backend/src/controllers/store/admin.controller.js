@@ -1,11 +1,11 @@
 const Admin = require("../../models/adminAndAnalytics/admin.model");
+const Category = require("../../models/catalogAndInventory/category.model");
 const { ApiError } = require("../../utils/apiError");
 const { ApiResponse } = require("../../utils/ApiResponse");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // Admin Auth Controllers
-
 exports.loginAdmin = async (req, res, next) => {
   try {
     const { email, store, password } = req.body;
@@ -54,3 +54,132 @@ exports.logoutAdmin = async (req, res, next) => {
     next(error);
   }
 };
+
+// Admin Controllers
+
+// Category Controllers
+exports.createCategory = async (req, res, next) => {
+  try {
+    const {name , slug , image} = req.body
+    const ALLOWED_FIELDS = ["name" , "slug" , "image"]
+    const isFieldsValid = Object.keys(req.body).every((k)=>ALLOWED_FIELDS.includes(k))
+    if(!isFieldsValid){
+      throw new ApiError(400 , "Invalid fields in request body")
+    }
+    if(!name || !slug || !image){
+      throw new ApiError(400 , "All fields are required")
+    }
+    // Check if category with the same name or slug already exists
+    const isCategoryExists = await Category.findOne({ $or: [{ name: name }, { slug: slug }] });
+    if (isCategoryExists) {
+      throw new ApiError(400, "Category with this name or slug already exists");
+    }
+    
+    const newCategory = new Category({
+      name,
+      slug,
+      image
+    });
+    await newCategory.save();
+    const response = new ApiResponse(201, "Category created successfully", {
+      categoryId: newCategory._id,
+      name: newCategory.name,
+      slug: newCategory.slug,
+      image: newCategory.image
+    });
+    res.status(201).json(response);
+    
+  } catch (error) {
+    next(error)
+  }
+
+}
+exports.getCategories = async (req, res, next) => {
+  try {
+    const categories = await Category.find();
+    const response = new ApiResponse(200, "Categories fetched successfully", {
+      categories: categories
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    next(error)
+  }
+}
+exports.getCategoryById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findById(id);
+    if (!category) {
+      throw new ApiError(404, "Category not found");
+    }
+    const response = new ApiResponse(200, "Category fetched successfully", {
+      category: category
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    next(error)
+  }
+}
+exports.updateCategory = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, slug, image } = req.body;
+    const ALLOWED_FIELDS = ["name", "slug", "image"];
+    const isFieldsValid = Object.keys(req.body).every((k) => ALLOWED_FIELDS.includes(k));
+    if (!isFieldsValid) {
+      throw new ApiError(400, "Invalid fields in request body");
+    }
+    if (!name && !slug && !image) {
+      throw new ApiError(400, "At least one field is required to update");
+    }
+    const category = await Category.findById(id);
+    if (!category) {
+      throw new ApiError(404, "Category not found");
+    }
+    // Check if category with the same name or slug already exists
+    if (name && name !== category.name) {
+      const isNameExists = await Category.findOne({ name: name });
+      if (isNameExists) {
+        throw new ApiError(400, "Category with this name already exists");
+      }
+      category.name = name;
+    }
+    if (slug && slug !== category.slug) {
+      const isSlugExists = await Category.findOne({ slug: slug });
+      if (isSlugExists) {
+        throw new ApiError(400, "Category with this slug already exists");
+      }
+      category.slug = slug;
+    }
+    if (image) {
+      category.image = image;
+    }
+    await category.save();
+    const response = new ApiResponse(200, "Category updated successfully", {
+      category: category
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    next(error)
+  }
+}
+exports.deleteCategory = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findById(id);
+    if (!category) {
+      throw new ApiError(404, "Category not found");
+    }
+    await Category.findByIdAndDelete(id);
+    const response = new ApiResponse(200, "Category deleted successfully");
+    res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
+  } 
+}
+
+// Product Controllers
+
+
+

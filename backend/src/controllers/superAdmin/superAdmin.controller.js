@@ -4,7 +4,6 @@ const { ApiError } = require("../../utils/apiError");
 const { ApiResponse } = require("../../utils/ApiResponse");
 const bcrypt = require("bcrypt");
 
-
 exports.createStore = async (req, res, next) => {
   try {
     const {
@@ -72,14 +71,8 @@ exports.createStore = async (req, res, next) => {
 
 exports.createAdmin = async (req, res, next) => {
   try {
-    const { email, name, phone, store,  password } = req.body;
-    const ALLOWED_FIELDS = [
-      "email",
-      "name",
-      "phone",
-      "store",
-      "password",
-    ];
+    const { email, name, phone, store, password } = req.body;
+    const ALLOWED_FIELDS = ["email", "name", "phone", "store", "password"];
     const isAllowed = Object.keys(req.body).every((k) =>
       ALLOWED_FIELDS.includes(k)
     );
@@ -119,15 +112,33 @@ exports.createAdmin = async (req, res, next) => {
     next(error);
   }
 };
-
-
+exports.deleteAdmin = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      throw new ApiError(400, "Admin ID is required");
+    }
+    const admin = await Admin.findById(id);
+    if (!admin) {
+      throw new ApiError(404, "Admin not found");
+    }
+    if (admin.role !== "admin") {
+      throw new ApiError(400, "Cannot delete non-admin user");
+    }
+    await Admin.findByIdAndDelete(id);
+    const response = new ApiResponse(200, "Admin deleted successfully");
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // Super Admin Controllers
-exports.getAllStores = async (req, res, next) => {};
-exports.getStoreById = async (req, res, next) => {};
-exports.updateStore = async (req, res, next) => {};
-exports.deleteStore = async (req, res, next) => {};
-exports.getAllAdmins = async (req, res, next) => {};
-exports.getAdminById = async (req, res, next) => {};
-exports.updateAdmin = async (req, res, next) => {};
-exports.deleteAdmin = async (req, res, next) => {};
+// exports.getAllStores = async (req, res, next) => {};
+// exports.getStoreById = async (req, res, next) => {};
+// exports.updateStore = async (req, res, next) => {};
+// exports.deleteStore = async (req, res, next) => {};
+// exports.getAllAdmins = async (req, res, next) => {};
+// exports.getAdminById = async (req, res, next) => {};
+// exports.updateAdmin = async (req, res, next) => {};
+// exports.deleteAdmin = async (req, res, next) => {};

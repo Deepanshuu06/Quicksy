@@ -23,8 +23,6 @@ const superAdminAuth = async (req, res, next) => {
     if (!superadmin) {
       throw new ApiError(401, "Unauthorized");
     }
-
-    console.log(superadmin);
     
     if (superadmin.role !== "superadmin") {
       throw new ApiError(401, "Unauthorized");

@@ -8,10 +8,11 @@ router.post("/login", superAdminAuthController.loginSuperAdmin);
 router.post("/logout", superAdminAuthController.logoutSuperAdmin);
 
 // Super Admin Routes
-
+router.post("/create-store",superAdminAuth, superAdminController.createStore);
 router.post("/create-admin", superAdminAuth, superAdminController.createAdmin);
+router.delete("/delete-admin/:id", superAdminAuth, superAdminController.deleteAdmin);
 
-router.post("/create-store", superAdminController.createStore);
+
 // router.get("/stores", superAdminController.getAllStores);
 // router.get("/stores/:id", superAdminController.getStoreById);
 // router.put("/stores/:id", superAdminController.updateStore);

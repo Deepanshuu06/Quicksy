@@ -26,7 +26,7 @@ const categorySchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    default: null,
+    required:true,
     validate: {
       validator: function (v) {
         // Basic URL validation
