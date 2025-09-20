@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const adminController = require("../../controllers/store/admin.controller");
+const adminAuth = require("../../middleware/adminAuth");
 
 // Admin Auth Routes
 router.post("/login", adminController.loginAdmin);
@@ -8,17 +9,17 @@ router.post("/logout", adminController.logoutAdmin);
 // Admin Routes
 
 // category routes
-router.post('/category', adminController.createCategory);
-router.get('/category', adminController.getCategories);
-router.get('/category/:id', adminController.getCategoryById);
-router.put('/category/:id', adminController.updateCategory);
+router.post('/category',adminAuth, adminController.createCategory);
+router.get('/category',adminAuth, adminController.getCategories);
+router.get('/category/:id',adminAuth, adminController.getCategoryById);
+router.put('/category/:id',adminAuth, adminController.updateCategory);
 // router.delete('/category/:id', adminController.deleteCategory);
 
 
 
 // product routes
-router.post('/product', adminController.createProduct);
-router.get('/product', adminController.getProducts);
+router.post('/product', adminAuth, adminController.createProduct);
+router.get('/product',adminAuth, adminController.getProducts);
 // router.get('/product/:id', adminController.getProductById);
 // router.put('/product/:id', adminController.updateProduct);
 // router.delete('/product/:id', adminController.deleteProduct);

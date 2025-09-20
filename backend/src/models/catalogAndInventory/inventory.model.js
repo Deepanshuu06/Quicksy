@@ -17,6 +17,26 @@ const inventorySchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    lowStockThreshold: {
+      type: Number,
+      default: 5,
+      min: 0,
+    },
+    unit: {
+      type: String,
+      enum: ["pcs", "kg", "g", "l", "ml"],
+      default: "pcs",
+    },
+    reserved: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    sold: {
+      type: Number,
+      default: 0,
+      min: 0,
+    }
   },
   {
     timestamps: true,
@@ -24,6 +44,7 @@ const inventorySchema = new mongoose.Schema(
 );
 
 
-const Inventory = mongoose.model("Inventory", inventorySchema);
+inventorySchema.index({ product: 1, store: 1 }, { unique: true });
 
+const Inventory = mongoose.model("Inventory", inventorySchema);
 module.exports = Inventory;

@@ -36,11 +36,10 @@ const productSchema = mongoose.Schema({
     minlength: 3,
     maxlength: 20,
   },
-  stockQuantity: {
-    type: Number,
-    default: 0,
-    required: true,
-
+  inventory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Inventory",
+    required: false,
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
@@ -54,9 +53,9 @@ const productSchema = mongoose.Schema({
     
   },
   attributes: {
-    weight: { type: String },
-    size: { type: String },
-    brand: { type: String },
+    weight: { type: String , required:true},
+    size: { type: String , required:true},
+    brand: { type: String , required:true},
   },
   images: {
     type: [String], 

@@ -1,5 +1,6 @@
 const Admin = require("../../models/adminAndAnalytics/admin.model");
 const Category = require("../../models/catalogAndInventory/category.model");
+const Product = require("../../models/catalogAndInventory/product.model");
 const { ApiError } = require("../../utils/apiError");
 const { ApiResponse } = require("../../utils/ApiResponse");
 const bcrypt = require("bcrypt");
@@ -38,7 +39,7 @@ exports.loginAdmin = async (req, res, next) => {
     });
     const token = jwt.sign({ _id: admin._id }, process.env.JWT_SECRET);
 
-    res.cookie("token", token);
+    res.cookie("AdminToken", token);
     res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -181,5 +182,58 @@ exports.deleteCategory = async (req, res, next) => {
 
 // Product Controllers
 
+exports.createProduct = async (req, res, next) => {
+  const { name, description, price, sku, category, attributes, images } = req.body;
+  const ALLOWED_FIELDS = ["name", "description", "price", "sku",, "category", "attributes", "images"];
+  const isFieldsValid = Object.keys(req.body).every((k) => ALLOWED_FIELDS.includes(k));
+  if (!isFieldsValid) {
+    throw new ApiError(400, "Invalid fields in request body");
+  }
+  if (!name || !description || !price || !sku  || !category || !attributes || !images) {
+    throw new ApiError(400, "All fields are required");
+  }
+  try {
+    // Check if product with the same SKU already exists
+    const isProductExists = await Product.findOne({ sku: sku });
+    if (isProductExists) {
+      throw new ApiError(400, "Product with this SKU already exists");
+    }
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      sku,
+      category,
+      attributes,
+      images
+    });
+    await newProduct.save();
+    const response = new ApiResponse(201, "Product created successfully", {
+      productId: newProduct._id,
+      name: newProduct.name,
+      description: newProduct.description,
+      price: newProduct.price,
+      sku: newProduct.sku,
+      category: newProduct.category,
+      attributes: newProduct.attributes,
+      images: newProduct.images
+    });
+    res.status(201).json(response);
+  } catch (error) {
+    next(error);
+  }
+};
 
+exports.getProducts = async (req, res, next )=>{
+try {
 
+  const products = await Product.find().populate('category').populate('inventory');
+  const response = new ApiResponse(200, "Products fetched successfully", {
+    products: products
+  });
+  res.status(200).json(response);
+} catch (error) {
+  next(error)
+}
+  
+}
