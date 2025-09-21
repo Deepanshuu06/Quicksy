@@ -1,6 +1,7 @@
 const Admin = require("../../models/adminAndAnalytics/admin.model");
 const Category = require("../../models/catalogAndInventory/category.model");
 const Product = require("../../models/catalogAndInventory/product.model");
+const Order = require("../../models/orderAndCart/order.model");
 const { ApiError } = require("../../utils/apiError");
 const { ApiResponse } = require("../../utils/ApiResponse");
 const bcrypt = require("bcrypt");
@@ -97,7 +98,7 @@ exports.createCategory = async (req, res, next) => {
 }
 exports.getCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().populate('products');
     const response = new ApiResponse(200, "Categories fetched successfully", {
       categories: categories
     });
@@ -208,6 +209,13 @@ exports.createProduct = async (req, res, next) => {
       images
     });
     await newProduct.save();
+    // Add product to category's products array
+    const Category = require("../../models/catalogAndInventory/category.model");
+    await Category.findByIdAndUpdate(
+      newProduct.category,
+      { $push: { products: newProduct._id } },
+      { new: true }
+    );
     const response = new ApiResponse(201, "Product created successfully", {
       productId: newProduct._id,
       name: newProduct.name,
@@ -237,3 +245,112 @@ try {
 }
   
 }
+
+exports.getProductById = async (req,res,next)=>{
+const productId = req.params.id;
+try{
+  if(!productId){
+    throw new ApiError(400,"Product ID is required")
+  }
+  const product = await Product.findById(productId).populate('category')
+  if(!product){
+    throw new ApiError(404,"Product not found")
+  }
+  const response = new ApiResponse(200,"Product fetched successfully",{
+    product: product
+  })
+  res.status(200).json(response)
+  
+
+
+}catch(error){
+  next(error)
+}
+}
+
+exports.updateProduct = async (req, res , next)=>{
+  try {
+    const productId = req.params.id;
+    const { name, description, price, sku, category, attributes, images } = req.body;
+    const ALLOWED_FIELDS = ["name", "description", "price", "sku", "category", "attributes", "images"];
+    const isFieldsValid = Object.keys(req.body).every((k) => ALLOWED_FIELDS.includes(k));
+    if (!isFieldsValid) {
+      throw new ApiError(400, "Invalid fields in request body");
+    }
+    if (!name && !description && !price && !sku && !category && !attributes && !images) {
+      throw new ApiError(400, "At least one field is required to update");
+    }
+    if (!productId) {
+      throw new ApiError(400, "Product ID is required");
+    }
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new ApiError(404, "Product not found");
+    }
+    // Check if product with the same SKU already exists
+    if (sku && sku !== product.sku) {
+      const isSkuExists = await Product.findOne({ sku: sku });
+      if (isSkuExists) {
+        throw new ApiError(400, "Product with this SKU already exists");
+      }
+      product.sku = sku;
+    }
+    if (name) {
+      product.name = name;
+    }
+    if (description) {
+      product.description = description;
+    }
+    if (price) {
+      product.price = price;
+    }
+    if (category) {
+      product.category = category;
+    }
+    if (attributes) {
+      product.attributes = attributes;
+    }
+    if (images) {
+      product.images = images;
+    }
+    await product.save();
+    const response = new ApiResponse(200, "Product updated successfully", {
+      product: product
+    });
+    res.status(200).json(response);
+    
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.deleteProduct = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    if (!productId) {
+      throw new ApiError(400, "Product ID is required");
+    }
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new ApiError(404, "Product not found");
+    }
+    await Product.findByIdAndDelete(productId);
+    const response = new ApiResponse(200, "Product deleted successfully");
+    res.status(200).json(response);
+  } catch (error) {
+    next(error)
+  } 
+}
+
+// order Controllers
+exports.getOrders = async (req, res, next) => {
+  try {
+    const orders = await Order.find().populate("items.product").populate("user");
+    const response = new ApiResponse(200, "Orders fetched successfully", {
+      orders: orders
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+};

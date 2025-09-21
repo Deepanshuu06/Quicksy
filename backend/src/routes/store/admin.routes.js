@@ -20,10 +20,12 @@ router.put('/category/:id',adminAuth, adminController.updateCategory);
 // product routes
 router.post('/product', adminAuth, adminController.createProduct);
 router.get('/product',adminAuth, adminController.getProducts);
-// router.get('/product/:id', adminController.getProductById);
-// router.put('/product/:id', adminController.updateProduct);
-// router.delete('/product/:id', adminController.deleteProduct);
-// // order routes
+router.get('/product/:id', adminController.getProductById);
+router.put('/product/:id', adminController.updateProduct);
+router.delete('/product/:id', adminController.deleteProduct);
+
+
+// order routes
 // router.get('/orders', adminController.getAllOrders);
 // router.get('/orders/:id', adminController.getOrderById);
 // router.put('/orders/:id/status', adminController.updateOrderStatus);
