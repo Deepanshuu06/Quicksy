@@ -3,12 +3,14 @@ const User = require("../models/userAndAccess/user.model");
 const { ApiError } = require("../utils/apiError");
 const userAuth = async (req, res, next) => {
   try {
-    const token = req.cookies;
+    const token = req.cookies.token;
+
     if (!token) {
       throw new ApiError(401, "Unauthorized");
     }
     const decodeObj = jwt.verify(token, process.env.JWT_SECRET);
     const { _id } = decodeObj;
+
     if (!_id) {
       throw new ApiError(401, "Unauthorized");
     }
@@ -16,6 +18,7 @@ const userAuth = async (req, res, next) => {
     if (!user) {
       throw new ApiError(401, "Unauthorized");
     }
+
     req.user = user;
     next();
   } catch (error) {

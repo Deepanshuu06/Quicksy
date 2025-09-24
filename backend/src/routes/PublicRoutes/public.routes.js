@@ -4,10 +4,8 @@ const publicController = require("../../controllers/publicAccessApi/public.contr
 
 // Public Routes
 router.get("/categories", publicController.getCategories);
-
-
-// router.get("/products?category=:categoryId", userSearchesController.getProductsByCategory);
-// router.get("/products?search=:query", userSearchesController.searchProducts);
-// router.get("/products/:id", userSearchesController.getProductById);
+router.get("/products", publicController.getProductsByCategory);
+router.get("/search", publicController.searchProducts);
+router.get("/product/:id", publicController.getProductById);
 
 module.exports = router;

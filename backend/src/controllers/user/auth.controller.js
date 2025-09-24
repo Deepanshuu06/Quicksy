@@ -1,8 +1,8 @@
-const User = require("../models/userAndAccess/user.model");
-const { ApiError } = require("../utils/apiError");
-const { ApiResponse } = require("../utils/ApiResponse");
-const loginValidation = require("../utils/loginValidation");
-const signupValidation = require("../utils/signupValidation");
+const User = require("../../models/userAndAccess/user.model");
+const { ApiError } = require("../../utils/apiError");
+const { ApiResponse } = require("../../utils/ApiResponse");
+const loginValidation = require("../../utils/loginValidation");
+const signupValidation = require("../../utils/signupValidation");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 

@@ -59,6 +59,18 @@ const userSchema = new mongoose.Schema(
         ref: "Product",
       },
     ],
+    pastOrders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
+    addresses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Address",
+      },
+    ],
     password: {
       type: String,
       required: true,

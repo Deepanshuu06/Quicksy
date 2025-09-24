@@ -5,10 +5,11 @@ const app = express();
 const PORT = 7777;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const authRoutes = require("./routes/auth.routes");
+const authRoutes = require("./routes/user/auth.routes");
 const adminRoutes = require("./routes/store/admin.routes");
 const superAdminRoutes = require("./routes/superAdmin/superAdmin.routes");
 const publicRoutes = require("./routes/PublicRoutes/public.routes");
+const userRoutes = require("./routes/user/user.routes");
 
 
 const errHandler = require("./middleware/errorHandler");
@@ -25,10 +26,11 @@ app.use(express.json());
 app.use(errHandler); 
 app.use(cookieParser());
 
+app.use('/api/v1/public', publicRoutes); 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user" , userRoutes)
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/super-admin", superAdminRoutes);
-app.use('/api/v1/public', publicRoutes); 
 
 
 
