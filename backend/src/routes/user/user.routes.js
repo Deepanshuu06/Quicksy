@@ -5,11 +5,7 @@ const profileController = require("../../controllers/user/profile.controller");
 
 //User Profile & Address routes
 router.get("/profile", userAuth, profileController.getProfile);
-
-module.exports = router;
-
-
-
+router.put("/profile", userAuth, profileController.updateProfile);
 
 
 
@@ -19,3 +15,4 @@ module.exports = router;
 //User Orders routes
 
 //User Payments routes 
+module.exports = router;
