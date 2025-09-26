@@ -29,3 +29,11 @@ exports.updateProfile = async (req,res,next)=>{
     next(error);
   }
 }
+exports.addAddress = async (req,res,next)=>{
+  try {
+    const user = req.user
+    
+  } catch (error) {
+    next(error)
+  }
+}

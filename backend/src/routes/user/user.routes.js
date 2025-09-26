@@ -6,9 +6,7 @@ const profileController = require("../../controllers/user/profile.controller");
 //User Profile & Address routes
 router.get("/profile", userAuth, profileController.getProfile);
 router.put("/profile", userAuth, profileController.updateProfile);
-
-
-
+router.post("/address", userAuth, profileController.addAddress);
 
 // User Cart & Wishlist routes
 
