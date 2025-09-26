@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 
 const addressSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'User reference is required'],
-  },
+ 
   street: {
     type: String,
     required: [true, 'Street is required'],
@@ -25,7 +21,7 @@ const addressSchema = new mongoose.Schema({
   postalCode: {
     type: String,
     required: [true, 'Postal code is required'],
-    minlength: [4, 'Postal code must be at least 4 digits'],
+    minlength: [6, 'Postal code must be at least 6 digits'],
     maxlength: [6, 'Postal code cannot exceed 6 digits'],
     match: [/^\d+$/, 'Postal code must be numeric'],
   },
@@ -39,6 +35,22 @@ const addressSchema = new mongoose.Schema({
   },
   longitude: {
     type: Number,
+  },
+  addressType: {
+    type: String,
+    enum: ['Home', 'Work', 'Other'],
+    default: 'Home',
+    required: true,
+    trim: true,
+    maxlength: [10, 'Address type cannot exceed 10 characters'],
+    minlength: [4, 'Address type must be at least 4 characters'],
+    uppercase: true,
+    validate: {
+      validator: function(v) {
+        return ['HOME', 'WORK', 'OTHER'].includes(v);
+      },
+      message: props => `${props.value} is not a valid address type!`
+    }
   },
 }, { timestamps: true });
 

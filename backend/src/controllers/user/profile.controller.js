@@ -1,3 +1,4 @@
+const Address = require("../../models/userAndAccess/address.model");
 const User = require("../../models/userAndAccess/user.model");
 const { ApiError } = require("../../utils/apiError");
 const { ApiResponse } = require("../../utils/ApiResponse");
@@ -31,9 +32,26 @@ exports.updateProfile = async (req,res,next)=>{
 }
 exports.addAddress = async (req,res,next)=>{
   try {
-    const user = req.user
-    
+    const user = req.user;
+    // Restrict to max 3 addresses
+    if (user.addresses.length >= 3) {
+      throw new ApiError(400, "You can only add up to 3 addresses.");
+    }
+    const Allowed_Fields = ["street", "city", "state", "postalCode", "country" , "addressType"];
+    const isFieldValid = Object.keys(req.body).every((k) => Allowed_Fields.includes(k));
+    if (!isFieldValid) {
+      throw new ApiError(400, "Invalid fields in request body");
+    }
+    const newAddress = new Address({
+      ...req.body
+    });
+    await newAddress.save();
+    user.addresses.push(newAddress._id);
+    await user.save();
+    const response = new ApiResponse(200, "Address added successfully", await user.populate('addresses'));
+    res.status(200).json(response);
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
+exports.deleteAddress = 
