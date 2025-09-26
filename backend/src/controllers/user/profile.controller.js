@@ -6,7 +6,7 @@ const { ApiResponse } = require("../../utils/ApiResponse");
 exports.getProfile = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate({path:"cart" , populate: { path: "product" }}).populate('favourites').populate('pastOrders').populate('addresses');
     if (!user) {
       throw new ApiError(404, "User not found");
     }
@@ -19,8 +19,8 @@ exports.getProfile = async (req, res, next) => {
 exports.updateProfile = async (req,res,next)=>{
   try {
     const userId = req.user._id;
-    const { name, email, address } = req.body;
-    const user = await User.findByIdAndUpdate(userId, { name, email, address }, { new: true });
+    const { name, email } = req.body;
+    const user = await User.findByIdAndUpdate(userId, { name, email }, { new: true });
     if (!user) {
       throw new ApiError(404, "User not found");
     }
@@ -54,4 +54,32 @@ exports.addAddress = async (req,res,next)=>{
     next(error);
   }
 }
-exports.deleteAddress = 
+exports.getAllAddresses = async(req,res,next)=>{
+  try{
+const user = req.user;
+const populatedUser = await user.populate('addresses');
+const response = new ApiResponse(200, "Addresses fetched successfully", populatedUser.addresses);
+res.status(200).json(response);
+  }catch(error){
+    next(error)
+  }
+}
+exports.deleteAddress = async (req , res, next)=>{
+  try {
+    const user = req.user;
+    const {addressId} = req.params
+    if(!addressId){
+      throw new ApiError(400, "Address ID is required")
+    }
+    if(!user.addresses.includes(addressId)){
+      throw new ApiError(404, "Address not found in your profile")
+    }
+    user.addresses = user.addresses.filter(addrId => addrId.toString() !== addressId)
+    await user.save()
+    await Address.findByIdAndDelete(addressId)
+    const response = new ApiResponse(200, "Address deleted successfully", await user.populate('addresses'));
+    res.status(200).json(response);
+  } catch (error) {
+    next(error)
+  }
+}

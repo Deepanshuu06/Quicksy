@@ -7,6 +7,7 @@ const profileController = require("../../controllers/user/profile.controller");
 router.get("/profile", userAuth, profileController.getProfile);
 router.put("/profile", userAuth, profileController.updateProfile);
 router.post("/address", userAuth, profileController.addAddress);
+router.get("/address", userAuth, profileController.getAllAddresses);
 router.delete("/address/:addressId", userAuth, profileController.deleteAddress);
 
 // User Cart & Wishlist routes

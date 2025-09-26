@@ -23,8 +23,8 @@ exports.register = async (req, res , next) => {
 
     const user = new User({ name, phone, email, password: hashpassword });
     await user.save();
-    const response = new ApiResponse(200, "Login Successfull")
-    res.status(200).json(response)
+    const response = new ApiResponse(200, "Registration Successful", user);
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }
