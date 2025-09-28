@@ -38,8 +38,8 @@ const addressSchema = new mongoose.Schema({
   },
   addressType: {
     type: String,
-    enum: ['Home', 'Work', 'Other'],
-    default: 'Home',
+    enum: ['HOME', 'WORK', 'OTHER'],
+    default: 'HOME',
     required: true,
     trim: true,
     maxlength: [10, 'Address type cannot exceed 10 characters'],

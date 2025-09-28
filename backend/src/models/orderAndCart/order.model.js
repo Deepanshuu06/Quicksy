@@ -42,11 +42,18 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "paid", "failed", "refunded"],
       default: "pending",
     },
+    paymentMethod: {
+      type: String,
+      enum: ["COD", "ONLINE"],
+      required: true,
+    },
+
     orderStatus: {
       type: String,
       enum: ["pending", "packed", "out_for_delivery", "delivered", "cancelled"],
       default: "pending",
     },
+  
     deliveryPartner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DeliveryPartner",
@@ -67,12 +74,7 @@ orderSchema.pre('save', function(next) {
     next();
 });
 
-orderSchema.pre('save', function(next) {
-  if (this.isModified('items')) {
-    this.totalAmount = this.items.reduce((total, item) => total + item.quantity * (item.product.price || 0), 0);
-  }
-  next();
-});
+
 
 const Order = mongoose.model("Order", orderSchema);
 module.exports = Order;

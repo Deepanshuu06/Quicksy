@@ -11,6 +11,7 @@ const superAdminRoutes = require("./routes/superAdmin/superAdmin.routes");
 const publicRoutes = require("./routes/PublicRoutes/public.routes");
 const userRoutes = require("./routes/user/user.routes");
 const cartRoutes = require("./routes/user/cart.routes");
+const orderRoutes = require("./routes/user/order.routes");
 
 const errHandler = require("./middleware/errorHandler");
 
@@ -32,6 +33,7 @@ app.use("/api/v1/user" , userRoutes)
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/super-admin", superAdminRoutes);
 app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/order", orderRoutes);
 
 async function startServer() {
   try {

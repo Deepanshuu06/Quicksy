@@ -1,5 +1,6 @@
 const Admin = require("../../models/adminAndAnalytics/admin.model");
 const Category = require("../../models/catalogAndInventory/category.model");
+const Inventory = require("../../models/catalogAndInventory/inventory.model");
 const Product = require("../../models/catalogAndInventory/product.model");
 const Order = require("../../models/orderAndCart/order.model");
 const { ApiError } = require("../../utils/apiError");
@@ -343,9 +344,17 @@ exports.deleteProduct = async (req, res, next) => {
 }
 
 // order Controllers
-exports.getOrders = async (req, res, next) => {
+exports.getAllOrders = async (req, res, next) => {
   try {
-    const orders = await Order.find().populate("items.product").populate("user");
+    const admin = req.admin;
+    if(!admin || !admin.store){
+      throw new ApiError(403, "You are not authorized to view orders")
+    }
+    
+    const orders = await Order.find({store: admin.store})
+      .populate({path:"items.product", select: "name price sku"})
+      .populate({ path: "user", select: "name email phone profileImage -_id" })
+      .populate('deliveryAddress');
     const response = new ApiResponse(200, "Orders fetched successfully", {
       orders: orders
     });
@@ -354,3 +363,56 @@ exports.getOrders = async (req, res, next) => {
     next(error);
   }
 };
+
+
+// inventory controllers
+
+exports.getInventory = async (req,res,next)=>{
+  try{
+
+  }catch(error){
+    next(error)
+  }
+}
+
+exports.addInventory = async (req,res,next)=>{
+  try {
+    const admin = req.admin;
+    const {productId , quantity , unit} = req.body;
+    const ALLOWED_FIELDS = ["productId" , "quantity" , "unit"]
+    const isFieldsValid = Object.keys(req.body).every((k)=>ALLOWED_FIELDS.includes(k))
+    if(!isFieldsValid){
+      throw new ApiError(400 , "Invalid fields in request body")
+    }
+    if(!productId || !quantity || !unit){
+      throw new ApiError(400 , "All fields are required")
+    }
+    // Check if product exists
+    const product = await Product.findById(productId);
+    if(!product){
+      throw new ApiError(404 , "Product not found")
+    }
+    // Check if inventory for the product already exists
+    const existingInventory = await Inventory.findOne({product: productId});
+    if(existingInventory){
+      throw new ApiError(400 , "Inventory for this product already exists you can update it instead")
+    }
+    const newInventory = new Inventory({
+      product: productId,
+      quantity,
+      unit,
+      store: admin.store
+    });
+    await newInventory.save();
+    // Add inventory reference to product
+    product.inventory = newInventory._id;
+    await product.save();
+    const response = new ApiResponse(201 , "Inventory added successfully" , {
+      inventory: newInventory
+    })
+    res.status(201).json(response)
+    
+  } catch (error) {
+    next(error)
+  }
+}

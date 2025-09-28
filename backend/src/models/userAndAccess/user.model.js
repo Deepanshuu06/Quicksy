@@ -68,6 +68,11 @@ const userSchema = new mongoose.Schema(
         ref: "Order",
       },
     ],
+    nearbyStore: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Store",
+      default: "68cdde95b098bde863ed5d40", // Default store ID
+    },
     addresses: [
       {
         type: mongoose.Schema.Types.ObjectId,
