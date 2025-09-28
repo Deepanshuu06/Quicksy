@@ -12,7 +12,6 @@ const publicRoutes = require("./routes/PublicRoutes/public.routes");
 const userRoutes = require("./routes/user/user.routes");
 const cartRoutes = require("./routes/user/cart.routes");
 
-
 const errHandler = require("./middleware/errorHandler");
 
 
