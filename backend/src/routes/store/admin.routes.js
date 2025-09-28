@@ -35,7 +35,7 @@ router.post('/inventory', adminAuth, adminController.addInventory);
 // order routes
 router.get('/orders',adminAuth, adminController.getAllOrders);
 // router.get('/orders/:id', adminController.getOrderById);
-// router.put('/orders/:id/status', adminController.updateOrderStatus);
+router.put('/orders/:id/status', adminController.updateOrderStatus);
 // router.delete('/orders/:id', adminController.deleteOrder);
 
 

@@ -363,13 +363,52 @@ exports.getAllOrders = async (req, res, next) => {
     next(error);
   }
 };
+exports.updateOrderStatus = async (req, res, next) => {
+  try {
+    const admin = req.admin;
+    if(!admin || !admin.store){
+      throw new ApiError(403, "You are not authorized to update orders")
+    }
+    const { id } = req.params;
+    const { orderStatus } = req.body;
+    const ALLOWED_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
+    if (!ALLOWED_STATUSES.includes(orderStatus)) {
+      throw new ApiError(400, "Invalid order status");
+    }
+    const order = await Order.findById(id);
+    if (!order) {
+      throw new ApiError(404, "Order not found");
+    }
+    if (order.store.toString() !== admin.store.toString()) {
+      throw new ApiError(403, "You are not authorized to update this order");
+    }
+    order.orderStatus = orderStatus;
+    await order.save();
+    const response = new ApiResponse(200, "Order status updated successfully", {
+      order: order
+    });
+    res.status(200).json(response); 
+
+
+  }catch (error) {
+    next(error);
+  }
+};
 
 
 // inventory controllers
 
 exports.getInventory = async (req,res,next)=>{
   try{
-
+const admin = req.admin;
+if(!admin || !admin.store){
+  throw new ApiError(203, " You are not authorized to view inventory")
+}
+const inventory = await Inventory.find({store: admin.store}).populate('product');
+const response = new ApiResponse(200, "Inventory fetched successfully", {
+  inventory: inventory
+})
+res.status(200).json(response);
   }catch(error){
     next(error)
   }
