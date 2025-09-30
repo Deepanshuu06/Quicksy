@@ -77,3 +77,16 @@ exports.placeOrder = async (req,res,next)=>{
         next(error)
     }
 }
+exports.getUserOrders = async (req,res,next)=>{
+    try {
+        const user = req.user;
+        const orders = await Order.find({user:user._id}).populate({
+            path: "items.product",
+            select: "name price"
+        });
+        const response = new ApiResponse(200, "User orders fetched successfully", orders);
+        res.status(200).json(response);
+    } catch (error) {
+        next(error)
+    }
+}
