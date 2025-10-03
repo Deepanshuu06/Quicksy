@@ -4,17 +4,29 @@ import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import LoginPage from './pages/LoginPage.jsx';
+import ErrorPage from './pages/ErrorPage.jsx';
+import RegistrationPage from './pages/RegistrationPage.jsx';
+import HomePage from './pages/HomePage.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <div>Error occurred</div>,
+    
+    errorElement: <ErrorPage />,
     children: [
       {
+        path:"/",
+        element:<HomePage />
+      },
+      {
         path:"/login", 
-        element: <div>Login Page</div>
-
+        element: <LoginPage />
+      },
+      {
+        path:"/register", 
+        element: <RegistrationPage/>
       }
     ],
 
