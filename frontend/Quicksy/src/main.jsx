@@ -8,6 +8,8 @@ import LoginPage from './pages/LoginPage.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
 import RegistrationPage from './pages/RegistrationPage.jsx';
 import HomePage from './pages/HomePage.jsx';
+import CategoryPage from './pages/CategoryPage.jsx';
+import ProductPage from './pages/ProductPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
       {
         path:"/register", 
         element: <RegistrationPage/>
+      },
+      {
+        path:"/category/:id",
+        element: <CategoryPage/>
+      },
+      {
+        path:"/product/:id",
+        element:<ProductPage />
       }
     ],
 
