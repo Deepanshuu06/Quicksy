@@ -54,7 +54,7 @@ const ProductPage = () => {
           <img
             src={product.images[0]}
             alt={product.name}
-            className="w-full max-w-xs h-auto object-contain rounded-xl shadow-md"
+            className="w-full max-w-xs lg:max-w-md h-auto object-contain rounded-xl shadow-md"
           />
         </div>
 

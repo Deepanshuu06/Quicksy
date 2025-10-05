@@ -31,7 +31,7 @@ function HomePage() {
   return (
     <div className="bg-gray-50 pb-16">
       <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-4">
           {promoBanners.map((banner, idx) => (
             <img
               key={idx}
@@ -48,7 +48,7 @@ function HomePage() {
           Shop by Categories
         </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-1">
           {categories.map((cat, index) => (
             <Link
               to={`/category/${cat.id}`}
@@ -60,10 +60,10 @@ function HomePage() {
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="w-full h-32 object-cover rounded-t-lg"
+                  className="w-full h-full object-cover rounded-t-lg"
                 />
                 <div className="p-2 text-center font-medium text-gray-700 text-sm">
-                  {cat.name}
+                  {/* {cat.name} */}
 
                 </div>
               </div>
