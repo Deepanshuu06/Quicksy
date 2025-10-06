@@ -42,7 +42,12 @@ exports.loginAdmin = async (req, res, next) => {
     });
     const token = jwt.sign({ _id: admin._id }, process.env.JWT_SECRET);
 
-    res.cookie("AdminToken", token);
+    res.cookie("AdminToken", token, {
+      httpOnly: true,
+      secure: false, // Must be false for localhost (no HTTPS)
+      sameSite: "lax", // Works across localhost:5173 and localhost:7777
+    });
+
     res.status(200).json(response);
   } catch (error) {
     next(error);
