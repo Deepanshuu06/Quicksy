@@ -6,6 +6,7 @@ const userAuth = async (req, res, next) => {
     const token = req.cookies.token;
 
     if (!token) {
+      res.clearCookie("token");
       throw new ApiError(401, "Unauthorized");
     }
     const decodeObj = jwt.verify(token, process.env.JWT_SECRET);

@@ -16,16 +16,16 @@ const orderRoutes = require("./routes/user/order.routes");
 const errHandler = require("./middleware/errorHandler");
 
 
+
+
+app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
 );
-
-app.use(express.json());
-app.use(errHandler); 
-app.use(cookieParser());
 
 app.use('/api/v1/public', publicRoutes); 
 app.use("/api/v1/auth", authRoutes);
@@ -34,6 +34,7 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/super-admin", superAdminRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/order", orderRoutes);
+app.use(errHandler); 
 
 async function startServer() {
   try {

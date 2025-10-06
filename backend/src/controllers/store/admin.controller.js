@@ -1,4 +1,5 @@
 const Admin = require("../../models/adminAndAnalytics/admin.model");
+const Banner = require("../../models/catalogAndInventory/banner.model");
 const Category = require("../../models/catalogAndInventory/category.model");
 const Inventory = require("../../models/catalogAndInventory/inventory.model");
 const Product = require("../../models/catalogAndInventory/product.model");
@@ -452,6 +453,61 @@ exports.addInventory = async (req,res,next)=>{
     res.status(201).json(response)
     
   } catch (error) {
+    next(error)
+  }
+}
+
+// Banner Controller
+
+exports.createBanner = async(req,res,next)=>{
+  try{
+    const admin = req.admin;
+    if(!admin || !admin.store){
+      throw new ApiError(403, "You are not authorized to create banner")
+    }
+    const {imageUrl, link , title, description} = req.body;
+    const ALLOWED_FIELDS = ["imageUrl", "link" , "title", "description"]
+    const isFieldsValid = Object.keys(req.body).every((k)=>ALLOWED_FIELDS.includes(k))
+    if(!isFieldsValid){
+      throw new ApiError(400 , "Invalid fields in request body")
+    }
+    if(!imageUrl || !link || !title || !description){
+      throw new ApiError(400 , "All fields are required")
+    }
+    // Check if banner with the same title already exists for the store
+    const isBannerExists = await Banner.findOne({$and: [{title: title}, {store: admin.store}]});
+    if(isBannerExists){
+      throw new ApiError(400 , "Banner with this title already exists for this store")
+    }
+    const newBanner = new Banner({
+      imageUrl,
+      link,
+      title,
+      description,
+      store: admin.store._id
+    });
+   await newBanner.save();
+    const response = new ApiResponse(201, "Banner created successfully", {
+      banner: newBanner
+    });
+    res.status(201).json(response);
+  } catch(error){
+    next(error)
+  }
+}
+
+exports.getBanners = async(req,res,next)=>{
+  try{
+  const admin = req.admin;
+  if(!admin || !admin.store){
+    throw new ApiError(403, "You are not authorized to view banners")
+  }
+  const banners = await Banner.find({store: admin.store});
+  const response = new ApiResponse(200, "Banners fetched successfully", {
+    banners: banners 
+  });
+  res.status(200).json(response);
+  }catch(error){
     next(error)
   }
 }

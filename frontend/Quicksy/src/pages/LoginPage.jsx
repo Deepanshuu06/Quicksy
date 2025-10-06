@@ -1,23 +1,29 @@
 import React from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 function LoginPage() {
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
+  const navigate = useNavigate();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("Submitting login:", { email, password });
-        try {
-            const res = await axios.post('http://localhost:7777/api/v1/auth/login', {
-                email: email,
-                password: password,
-            });
-            console.log("Login successful:", res.data);
-        } catch (error) {
-            console.error("Login failed:", error);
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:7777/api/v1/auth/login", {
+        email: email,
+        password: password,
+      } , { withCredentials: true });
+      console.log("Login successful:", res?.data);
+      toast.success("Login successful!");
+      navigate("/");
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials." + error.message);
+      setEmail("");
+      setPassword("");
+    }
+  };
 
   return (
     <div className="flex items-center justify-center px-4 py-12 bg-gray-50 min-h-[calc(100vh-64px)]">
@@ -31,7 +37,11 @@ function LoginPage() {
         <form className="space-y-5" onSubmit={handleSubmit}>
           {/* Email or Phone Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">Email or Phone</label>
+            <label
+              className="block text-sm font-medium text-gray-700 mb-1"
+              htmlFor="email">
+              Email or Phone
+            </label>
             <input
               id="email"
               type="text"
@@ -45,7 +55,11 @@ function LoginPage() {
 
           {/* Password Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">Password</label>
+            <label
+              className="block text-sm font-medium text-gray-700 mb-1"
+              htmlFor="password">
+              Password
+            </label>
             <input
               id="password"
               type="password"
@@ -60,8 +74,7 @@ function LoginPage() {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition"
-          >
+            className="w-full py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition">
             Login
           </button>
 
@@ -69,12 +82,16 @@ function LoginPage() {
           <div className="text-sm text-center text-gray-600 mt-4">
             <p>
               Don’t have an account?{" "}
-              <a href="/register" className="text-green-600 font-medium hover:underline">
+              <a
+                href="/register"
+                className="text-green-600 font-medium hover:underline">
                 Sign up
               </a>
             </p>
             <p className="mt-2">
-              <a href="/forgot-password" className="text-gray-500 hover:underline">
+              <a
+                href="/forgot-password"
+                className="text-gray-500 hover:underline">
                 Forgot password?
               </a>
             </p>

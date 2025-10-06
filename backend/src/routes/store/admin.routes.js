@@ -40,5 +40,12 @@ router.put('/orders/:id/status', adminController.updateOrderStatus);
 
 
 
+//Banner routes
+router.post('/banner', adminAuth, adminController.createBanner);
+router.get('/banner', adminAuth, adminController.getBanners);
+// router.put('/banner/:id', adminAuth, adminController.updateBanner);
+// router.delete('/banner/:id', adminAuth, adminController.deleteBanner);
+
+
 
 module.exports = router;

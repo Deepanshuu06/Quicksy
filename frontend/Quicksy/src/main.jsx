@@ -10,12 +10,13 @@ import RegistrationPage from './pages/RegistrationPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import CategoryPage from './pages/CategoryPage.jsx';
 import ProductPage from './pages/ProductPage.jsx';
+import Cart from './pages/Cart.jsx';
+import Profile from './pages/Profile.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    
     errorElement: <ErrorPage />,
     children: [
       {
@@ -28,15 +29,23 @@ const router = createBrowserRouter([
       },
       {
         path:"/register", 
-        element: <RegistrationPage/>
+        element: <RegistrationPage />
       },
       {
         path:"/category/:id",
-        element: <CategoryPage/>
+        element: <CategoryPage />
       },
       {
         path:"/product/:id",
         element:<ProductPage />
+      },
+      {
+        path:"/cart",
+        element:<Cart />
+      },
+      {
+        path:"/profile",
+        element:<Profile />
       }
     ],
 

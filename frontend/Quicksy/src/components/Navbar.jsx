@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { ShoppingCart, MapPin, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom"; // Use react-router-dom instead of react-router
 
+
+
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+
 
   return (
     <nav className="w-full bg-white shadow-sm sticky top-0 z-50">
@@ -36,11 +40,13 @@ function Navbar() {
 
         {/* Center: Search bar (hidden on mobile) */}
         <div className="hidden md:flex flex-1 mx-6">
+         <Link to="/search" className="w-full">
           <input
             type="text"
             placeholder="Search for atta, dal, snacks and more"
             className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 placeholder:text-gray-500"
           />
+         </Link>
         </div>
 
         {/* Right Section */}

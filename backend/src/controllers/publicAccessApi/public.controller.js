@@ -1,7 +1,32 @@
+const Banner = require("../../models/catalogAndInventory/banner.model");
 const Category = require("../../models/catalogAndInventory/category.model");
 const Product = require("../../models/catalogAndInventory/product.model");
 const { ApiError } = require("../../utils/apiError");
 const { ApiResponse } = require("../../utils/ApiResponse");
+
+
+exports.getHomeData = async (req, res, next) => {
+  try{
+    const categories = await Category.find().populate({path:"products", match:{isActive:true} , options:{limit:20}});
+
+    const categoryList = categories.map((category) => ({
+      id: category._id,
+      name: category.name,
+      image: category.image,
+      slug: category.slug,
+      products: category.products || [],
+    }));
+    const banners = await Banner.find({store:"68cdde95b098bde863ed5d40"}).limit(3);
+    const response = new ApiResponse(200, "Home data fetched successfully", {
+      categories: categoryList,
+      banners: banners
+    });
+    res.status(200).json(response);
+
+  }catch(error){
+    next(error)   
+  }
+};
 
 exports.getCategories = async (req, res, next) => {
   try {
@@ -80,3 +105,4 @@ exports.getProductById = async (req, res, next) => {
         next(error)
     }
 }
+

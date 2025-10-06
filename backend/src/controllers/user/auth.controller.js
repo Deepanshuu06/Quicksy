@@ -50,7 +50,12 @@ exports.login = async (req, res, next) => {
       });
       const token = jwt.sign({_id:user._id}, process.env.JWT_SECRET)
 
-      res.cookie("token",token)
+      res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // Must be false for localhost (no HTTPS)
+      sameSite: "lax", // Works across localhost:5173 and localhost:7777
+    });
+
       res.status(200).json(response);
     } else {
       throw new ApiError(401, "Invalid credentials");
