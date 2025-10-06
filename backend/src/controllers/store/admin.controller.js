@@ -64,6 +64,26 @@ exports.logoutAdmin = async (req, res, next) => {
   }
 };
 
+exports.getAdminProfile = async (req, res, next) => {
+  try {
+    const admin = req.admin;
+    if(!admin){
+      throw new ApiError(403, "You are not authorized to view this profile")
+    }
+    const response = new ApiResponse(200, "Admin profile fetched successfully", {
+      admin: {
+        _id: admin._id,
+        email: admin.email,
+        store: admin.store,
+        role: admin.role
+      }
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Admin Controllers
 
 // Category Controllers

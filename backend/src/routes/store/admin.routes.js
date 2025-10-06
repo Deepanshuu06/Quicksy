@@ -6,6 +6,7 @@ const adminAuth = require("../../middleware/adminAuth");
 // Admin Auth Routes
 router.post("/login", adminController.loginAdmin);
 router.post("/logout", adminController.logoutAdmin);
+router.get("/me", adminAuth, adminController.getAdminProfile);
 // Admin Routes
 
 // category routes

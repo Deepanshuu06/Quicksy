@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { checkAuth } from "../store/authSlice";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+   useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+
   const [formData, setFormData] = useState({
     email: "manager@freshmartstore.com",
     store: "68cdde95b098bde863ed5d40",
@@ -27,6 +41,7 @@ const Login = () => {
           withCredentials: true,
         }
       );
+      dispatch(checkAuth());
       console.log("Login successful:", response?.data);
       toast.success("Login successful!");
     } catch (error) {

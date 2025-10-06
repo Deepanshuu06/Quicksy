@@ -1,16 +1,22 @@
-import React from 'react'
-import { Outlet } from 'react-router'
+import React, { useEffect } from "react";
+import { Outlet } from "react-router";
 
-import  { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { checkAuth } from "./store/authSlice";
 
 const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   return (
     <div>
       <Outlet />
-      <Toaster/>
+      <Toaster />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
