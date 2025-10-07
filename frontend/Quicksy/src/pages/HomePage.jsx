@@ -89,22 +89,7 @@ function HomePage() {
           <div className="flex overflow-x-auto space-x-4 pb-2">
             {vegetables?.products?.map((product, idx) => (
               <Link to={`/product/${product?._id}`}>
-                <div
-                  key={idx}
-                  className="min-w-[160px] bg-white rounded-lg shadow-sm hover:shadow-md transition">
-                  <img
-                    src={`${product.images[0]}`}
-                    alt={`Drink ${idx + 1}`}
-                    className="w-full h-32 object-cover rounded-t-lg"
-                  />
-                  <div className="p-2 text-sm text-gray-700">
-                    <div className="font-medium"> {product?.name}</div>
-                    <div className="text-gray-500 text-xs">
-                      {product?.attributes?.weight}
-                    </div>
-                    <div className="font-semibold mt-1">₹{product?.price}</div>
-                  </div>
-                </div>
+                 <ProductCard product={product} key={idx} />
               </Link>
             ))}
           </div>
@@ -149,22 +134,7 @@ function HomePage() {
           <div className="flex overflow-x-auto space-x-4 pb-2">
             {beverage?.products?.map((product, idx) => (
               <Link to={`/product/${product?._id}`}>
-                <div
-                  key={idx}
-                  className="min-w-[160px] bg-white rounded-lg shadow-sm hover:shadow-md transition">
-                  <img
-                    src={`${product.images[0]}`}
-                    alt={`Drink ${idx + 1}`}
-                    className="w-full h-32 object-cover rounded-t-lg"
-                  />
-                  <div className="p-2 text-sm text-gray-700">
-                    <div className="font-medium"> {product?.name}</div>
-                    <div className="text-gray-500 text-xs">
-                      {product?.attributes?.weight}
-                    </div>
-                    <div className="font-semibold mt-1">₹{product?.price}</div>
-                  </div>
-                </div>
+            <ProductCard product={product} key={idx} />
               </Link>
             ))}
           </div>

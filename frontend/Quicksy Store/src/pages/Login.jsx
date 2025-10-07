@@ -33,8 +33,8 @@ const Login = () => {
 
   const fetchAdmin = async () => {
     try {
-      console.log("Form Data:", formData); // Debugging line
-      const response = await axios.post(
+
+      await axios.post(
         "http://localhost:7777/api/v1/admin/login",
         formData,
         {
@@ -42,7 +42,7 @@ const Login = () => {
         }
       );
       dispatch(checkAuth());
-      console.log("Login successful:", response?.data);
+
       toast.success("Login successful!");
     } catch (error) {
       console.error("Error during login:", error);

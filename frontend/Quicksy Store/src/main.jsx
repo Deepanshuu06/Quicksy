@@ -14,6 +14,8 @@ import PrivateRoute from "./route/PrivateRoute.jsx";
 
 import Home from "./pages/Home.jsx";
 import OrderDetails from "./pages/OrderDetails.jsx";
+import DeliveryPartner from "./pages/DeliveryPartner.jsx";
+import ProductsManagement from "./pages/ProductsManagement.jsx";
 
 const router = createBrowserRouter([
   {
@@ -33,8 +35,7 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: (
           <PrivateRoute>
-            {" "}
-            <Dashboard />{" "}
+            <Dashboard />
           </PrivateRoute>
         ),
       },
@@ -42,8 +43,7 @@ const router = createBrowserRouter([
         path: "/order-management",
         element: (
           <PrivateRoute>
-            {" "}
-            <OrderManagement />{" "}
+            <OrderManagement />
           </PrivateRoute>
         ),
       },
@@ -51,8 +51,7 @@ const router = createBrowserRouter([
         path: "/inventory",
         element: (
           <PrivateRoute>
-            {" "}
-            <Inventory />{" "}
+            <Inventory />
           </PrivateRoute>
         ),
       },
@@ -61,6 +60,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <OrderDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/delivery-partners",
+        element: (
+          <PrivateRoute>
+            <DeliveryPartner />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/products-management",
+        element: (
+          <PrivateRoute>
+            <ProductsManagement />
           </PrivateRoute>
         ),
       }

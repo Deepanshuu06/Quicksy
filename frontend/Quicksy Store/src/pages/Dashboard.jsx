@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import {
@@ -15,8 +15,10 @@ import {
 import axios from "axios";
 
 const Dashboard = () => {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
+  const [activeOrders, setActiveOrders] = useState([]);
+  const [last24HoursOrders, setLast24HoursOrders] = useState([]);
 
   const fetchData = async () => {
     try {
@@ -26,13 +28,21 @@ const Dashboard = () => {
           withCredentials: true,
         }
       );
-      // setRecentOrders(response?.data?.orders?.filter(order => order.createdAt >= new Date(Date.now() - 24*60*60*1000).toISOString()));
+      const ordersArr = Array.isArray(response?.data?.orders) ? response.data.orders : [];
+      setLast24HoursOrders(
+        ordersArr.filter(order => {
+          if (!order.createdAt) return false;
+          return new Date(order.createdAt) >= new Date(Date.now() - 24*60*60*1000);
+        })
+      );
+      setActiveOrders(response?.data?.data?.orders?.filter(order => order.orderStatus !== 'delivered' && order.orderStatus !== 'cancelled'));
       setRecentOrders(response?.data?.data?.orders);
-      setData(response.data);
+
     } catch (error) {
       console.error("Error fetching admin profile:", error);
     }
   };
+
 
 
   useEffect(() => {
@@ -59,14 +69,14 @@ const Dashboard = () => {
           {[
             {
               label: "Total Revenue (24h)",
-              value: "$200",
+              value: last24HoursOrders.reduce((sum, order) => sum + (Number(order.totalAmount) || 0), 0),
               change: "+10%",
               color: "text-green-600",
               icon: TrendingUp,
             },
             {
               label: "Active Orders (Live)",
-              value: "23",
+              value: activeOrders.length,
               color: "text-blue-600",
               icon: ShoppingBag,
             },

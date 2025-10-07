@@ -68,7 +68,7 @@ const OrderDetails = () => {
     }
   };
 
-console.log(order);
+
 
   useEffect(() => {
     fetchOrderById();

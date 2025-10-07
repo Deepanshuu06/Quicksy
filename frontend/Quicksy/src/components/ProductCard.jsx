@@ -21,14 +21,14 @@ function ProductCard({ product }) {
         <img
           src={product?.images[0]}
           alt={product?.name}
-          className="w-full h-44 object-contain "
+          className="w-full h-44 object-contain rounded-t-2xl rounded-b-lg "
         />
       </div>
 
       {/* Product Info */}
       <div className="px-3 pb-3 text-sm">
         {/* Delivery time */}
-        <div className="flex items-center text-xs text-gray-500 mb-1">
+        <div className="flex items-center text-xs text-gray-500 mb-1 mt-2">
           <span className="mr-1">⏱️</span>
           {product.deliveryTime || "9 MINS"}
         </div>

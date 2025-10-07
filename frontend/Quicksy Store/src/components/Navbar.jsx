@@ -31,7 +31,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/products">
+            <Link to="/products-management">
               <span className="block px-3 py-2 text-gray-700 hover:text-green-600 font-medium">
                 Products
               </span>
@@ -45,7 +45,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/orders">
+            <Link to="/order-management">
               <span className="block px-3 py-2 text-gray-700 hover:text-green-600 font-medium">
                 Order Management
               </span>
