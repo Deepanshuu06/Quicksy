@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { checkAuth } from "./store/authSlice";
 
+
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -12,7 +13,8 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div>
+    <div className="App">
+
       <Outlet />
       <Toaster />
     </div>

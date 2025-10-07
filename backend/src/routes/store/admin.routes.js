@@ -22,8 +22,8 @@ router.put('/category/:id',adminAuth, adminController.updateCategory);
 router.post('/product', adminAuth, adminController.createProduct);
 router.get('/product',adminAuth, adminController.getProducts);
 router.get('/product/:id', adminController.getProductById);
-router.put('/product/:id', adminController.updateProduct);
-router.delete('/product/:id', adminController.deleteProduct);
+router.put('/product/:id', adminAuth, adminController.updateProduct);
+router.delete('/product/:id', adminAuth, adminController.deleteProduct);
 
 //inventory routes
 router.get('/inventory', adminAuth, adminController.getInventory);
@@ -35,7 +35,7 @@ router.post('/inventory', adminAuth, adminController.addInventory);
 
 // order routes
 router.get('/orders',adminAuth, adminController.getAllOrders);
-// router.get('/orders/:id', adminController.getOrderById);
+router.get('/order/:id', adminAuth, adminController.getOrderById);
 router.put('/orders/:id/status', adminController.updateOrderStatus);
 // router.delete('/orders/:id', adminController.deleteOrder);
 

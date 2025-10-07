@@ -389,6 +389,31 @@ exports.getAllOrders = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getOrderById = async (req, res, next) => {
+  try{
+    const admin = req.admin;
+    console.log(admin)
+    if(!admin || !admin.store){
+      throw new ApiError(403, "You are not authorized to view this order")
+    }
+    const {id} = req.params;
+    if(!id){
+      throw new ApiError(400, "Order ID is required")
+    }
+    const order = await Order.findOne({$and: [{_id: id}, {store: admin.store}]}).populate("items.product").populate('user').populate('deliveryAddress');
+    if(!order){
+      throw new ApiError(404, "Order not found")
+    }
+    const response = new ApiResponse(200, "Order fetched successfully", {
+      order: order
+    });
+    res.status(200).json(response);
+  }catch(error){
+    next(error)
+  }
+};
+
 exports.updateOrderStatus = async (req, res, next) => {
   try {
     const admin = req.admin;
@@ -420,6 +445,7 @@ exports.updateOrderStatus = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 // inventory controllers

@@ -11,8 +11,9 @@ import Inventory from "./pages/Inventory.jsx";
 import store from "./store/store.js";
 import { Provider } from "react-redux";
 import PrivateRoute from "./route/PrivateRoute.jsx";
-import DeliveryPartner from "./pages/DeliveryPartner.jsx";
+
 import Home from "./pages/Home.jsx";
+import OrderDetails from "./pages/OrderDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-
+      {
+        path: "/login",
+        element: <Login />,
+      },
       {
         path: "/dashboard",
         element: (
@@ -52,13 +56,17 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path:"/order/:orderId",
+        element: (
+          <PrivateRoute>
+            <OrderDetails />
+          </PrivateRoute>
+        ),
+      }
     ],
   },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {},
+  
 ]);
 
 createRoot(document.getElementById("root")).render(
