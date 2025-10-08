@@ -2,21 +2,34 @@ import React from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { selectIsAuthenticated } from "../store/authSlice";
+import { useSelector } from "react-redux";
+import { setCredentials } from "../store/authSlice";
+  import { useDispatch } from "react-redux";
 
 function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
+  
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:7777/api/v1/auth/login", {
         email: email,
         password: password,
-      } , { withCredentials: true });
+      }, { withCredentials: true });
       console.log("Login successful:", res?.data);
       toast.success("Login successful!");
+      dispatch(setCredentials({ user: res?.data?.data }));
       navigate("/");
     } catch (error) {
       toast.error("Login failed. Please check your credentials." + error.message);

@@ -88,9 +88,7 @@ function HomePage() {
 
           <div className="flex overflow-x-auto space-x-4 pb-2">
             {vegetables?.products?.map((product, idx) => (
-              <Link to={`/product/${product?._id}`}>
                  <ProductCard product={product} key={idx} />
-              </Link>
             ))}
           </div>
         </section>
@@ -111,9 +109,8 @@ function HomePage() {
 
           <div className="flex overflow-x-auto space-x-4 pb-2">
             {dairy?.products?.map((product, idx) => (
-              <Link to={`/product/${product?._id}`}>
+
                <ProductCard product={product} key={idx} />
-              </Link>
             ))}
           </div>
         </section>
@@ -133,9 +130,7 @@ function HomePage() {
 
           <div className="flex overflow-x-auto space-x-4 pb-2">
             {beverage?.products?.map((product, idx) => (
-              <Link to={`/product/${product?._id}`}>
-            <ProductCard product={product} key={idx} />
-              </Link>
+              <ProductCard product={product} key={idx} />
             ))}
           </div>
         </section>

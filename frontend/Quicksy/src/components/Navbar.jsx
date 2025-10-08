@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { ShoppingCart, MapPin, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom"; // Use react-router-dom instead of react-router
-
+import { selectIsAuthenticated } from "../store/authSlice";
+import { useSelector } from "react-redux";
 
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
 
   return (
@@ -18,9 +19,12 @@ function Navbar() {
           <button
             className="md:hidden text-gray-700"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            aria-label="Toggle menu">
+            {menuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
 
           {/* Logo */}
@@ -32,7 +36,9 @@ function Navbar() {
           <div className="hidden sm:flex items-center space-x-2 cursor-pointer">
             <MapPin className="h-5 w-5 text-green-600" />
             <div className="flex flex-col leading-tight">
-              <span className="text-sm font-semibold text-gray-800">Delivery in 10 mins</span>
+              <span className="text-sm font-semibold text-gray-800">
+                Delivery in 10 mins
+              </span>
               <span className="text-xs text-gray-500">Jabalpur, MP</span>
             </div>
           </div>
@@ -40,23 +46,31 @@ function Navbar() {
 
         {/* Center: Search bar (hidden on mobile) */}
         <div className="hidden md:flex flex-1 mx-6">
-         <Link to="/search" className="w-full">
-          <input
-            type="text"
-            placeholder="Search for atta, dal, snacks and more"
-            className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 placeholder:text-gray-500"
-          />
-         </Link>
+          <Link to="/search" className="w-full">
+            <input
+              type="text"
+              placeholder="Search for atta, dal, snacks and more"
+              className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 placeholder:text-gray-500"
+            />
+          </Link>
         </div>
 
         {/* Right Section */}
         <div className="flex items-center space-x-3">
           {/* Login Button (hidden on xs) */}
-          <Link to="/login" className="hidden sm:block">
-            <button className="px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition">
-              Login
+          {!isAuthenticated && (
+            <Link to="/login" className="hidden sm:block">
+              <button className="px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition">
+                Login
+              </button>
+            </Link>
+          )}
+
+         {isAuthenticated&&( <Link to="/profile" className="block w-full">
+            <button className="w-full px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition cursor-pointer">
+              Profile
             </button>
-          </Link>
+          </Link>)}
 
           {/* Cart Button */}
           <Link to="/cart">
@@ -85,14 +99,16 @@ function Navbar() {
           <div className="flex items-center space-x-2">
             <MapPin className="h-5 w-5 text-green-600" />
             <div className="flex flex-col leading-tight">
-              <span className="text-sm font-semibold text-gray-800">Delivery in 10 mins</span>
+              <span className="text-sm font-semibold text-gray-800">
+                Delivery in 10 mins
+              </span>
               <span className="text-xs text-gray-500">Jabalpur, MP</span>
             </div>
           </div>
 
           {/* Login Button */}
           <Link to="/login" className="block w-full">
-            <button className="w-full px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition">
+            <button className="w-full px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition cursor-pointer">
               Login
             </button>
           </Link>

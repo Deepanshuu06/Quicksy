@@ -1,16 +1,24 @@
 import React from "react";
 import { Link } from "react-router";
+import { toast } from "react-hot-toast";
 
 function ProductCard({ product }) {
   const hasDiscount = product.oldPrice && product.oldPrice > product.price;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault(); // Prevent navigating to product page
+    toast.success(`${product.name} added to cart`);
+
     // Logic to add the product to the cart
     console.log(`Added ${product.name} to cart`);
+
   };
 
   return (
-    <div className="min-w-[180px] bg-white rounded-2xl border border-gray-100 hover:shadow-lg transition-all duration-200">
+
+      <Link to={`/product/${product?._id}`}>
+
+         <div className="min-w-[180px] bg-white rounded-2xl border border-gray-100 hover:shadow-lg transition-all duration-200">
       {/* Image + Offer Badge */}
       <div className="relative ">
         {hasDiscount && (
@@ -21,7 +29,7 @@ function ProductCard({ product }) {
         <img
           src={product?.images[0]}
           alt={product?.name}
-          className="w-full h-44 object-contain rounded-t-2xl rounded-b-lg "
+          className=" h-44 object-contain rounded-t-2xl rounded-b-lg bg-white w-full"
         />
       </div>
 
@@ -66,6 +74,8 @@ function ProductCard({ product }) {
         </div>
       </div>
     </div>
+      </Link>
+   
   );
 }
 

@@ -12,6 +12,10 @@ import CategoryPage from './pages/CategoryPage.jsx';
 import ProductPage from './pages/ProductPage.jsx';
 import Cart from './pages/Cart.jsx';
 import Profile from './pages/Profile.jsx';
+import SearchPage from './pages/SearchPage.jsx';
+import PrivateRoute from './route/PrivateRoute.jsx';
+import { Provider } from 'react-redux';
+import store from './store/store.js';
 
 const router = createBrowserRouter([
   {
@@ -45,7 +49,11 @@ const router = createBrowserRouter([
       },
       {
         path:"/profile",
-        element:<Profile />
+        element:<PrivateRoute><Profile /></PrivateRoute>
+      },
+      {
+        path:"/search",
+        element:<SearchPage />
       }
     ],
 
@@ -54,6 +62,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store} >
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );

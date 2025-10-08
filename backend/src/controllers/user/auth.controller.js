@@ -65,4 +65,8 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.logout = async (req, res) => {};
+exports.logout = async (req, res) => {
+  res.clearCookie("token");
+  const response = new ApiResponse(200, "Logout successful", null);
+  res.status(200).json(response);
+};
