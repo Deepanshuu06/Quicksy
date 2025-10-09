@@ -27,7 +27,7 @@ function LoginPage() {
         email: email,
         password: password,
       }, { withCredentials: true });
-      console.log("Login successful:", res?.data);
+
       toast.success("Login successful!");
       dispatch(setCredentials({ user: res?.data?.data }));
       navigate("/");

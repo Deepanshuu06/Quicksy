@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ShoppingCart, MapPin, Menu, X } from "lucide-react";
-import { Link } from "react-router-dom"; // Use react-router-dom instead of react-router
+import { Link, Navigate } from "react-router-dom"; // Use react-router-dom instead of react-router
 import { selectIsAuthenticated } from "../store/authSlice";
 import { useSelector } from "react-redux";
 
@@ -8,6 +8,17 @@ import { useSelector } from "react-redux";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  
+  const handleSearchChange = (e) => {
+    e.preventDefault();
+  if (searchQuery.trim()) {
+    Navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+  }
+  };
+
+  
 
 
   return (
@@ -49,6 +60,8 @@ function Navbar() {
           <Link to="/search" className="w-full">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for atta, dal, snacks and more"
               className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 placeholder:text-gray-500"
             />

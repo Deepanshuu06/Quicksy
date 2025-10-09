@@ -1,16 +1,26 @@
 import React from "react";
 import { Link } from "react-router";
 import { toast } from "react-hot-toast";
+import axios from "axios";
 
 function ProductCard({ product }) {
   const hasDiscount = product.oldPrice && product.oldPrice > product.price;
+  
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async(e) => {
     e.preventDefault(); // Prevent navigating to product page
-    toast.success(`${product.name} added to cart`);
+    try {
+      await axios.post("http://localhost:7777/api/v1/cart", { productId: product._id }, {
+        withCredentials: true,
+      });
+      toast.success(`${product.name} added to cart`);
+    } catch (error) {
+      console.error("Error adding to cart:", error);  
+      toast.error( error?.response?.data?.message);
+    }
+    
 
-    // Logic to add the product to the cart
-    console.log(`Added ${product.name} to cart`);
+   
 
   };
 

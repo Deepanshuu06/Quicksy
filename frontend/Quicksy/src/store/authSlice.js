@@ -50,7 +50,7 @@ const authSlice = createSlice({
       .addCase(restoreAuth.fulfilled, (state, action) => {
           state.status = "succeeded";
           state.user = action.payload.user;
-          console.log("User restored:", state.user);
+
       })
       .addCase(restoreAuth.rejected, (state, action) => {
         state.status = "failed";
