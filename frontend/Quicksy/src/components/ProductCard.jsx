@@ -4,23 +4,21 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 
 function ProductCard({ product }) {
-  const hasDiscount = product.oldPrice && product.oldPrice > product.price;
+  const hasDiscount = product?.oldPrice && product?.oldPrice > product?.price;
   
+  console.log("Product in ProductCard:", product);
 
   const handleAddToCart = async(e) => {
     e.preventDefault(); // Prevent navigating to product page
     try {
-      await axios.post("http://localhost:7777/api/v1/cart", { productId: product._id }, {
+      await axios.post("http://localhost:7777/api/v1/cart", { productId: product?._id }, {
         withCredentials: true,
       });
-      toast.success(`${product.name} added to cart`);
+      toast.success(`${product?.name} added to cart`);
     } catch (error) {
-      console.error("Error adding to cart:", error);  
-      toast.error( error?.response?.data?.message);
+      console.error("Error adding to cart:", error);
+      toast.error(error?.response?.data?.message);
     }
-    
-
-   
 
   };
 
@@ -48,28 +46,28 @@ function ProductCard({ product }) {
         {/* Delivery time */}
         <div className="flex items-center text-xs text-gray-500 mb-1 mt-2">
           <span className="mr-1">⏱️</span>
-          {product.deliveryTime || "9 MINS"}
+          {product?.deliveryTime || "9 MINS"}
         </div>
 
         {/* Product name */}
         <div className="font-medium text-gray-800 line-clamp-2">
-          {product.name}
+          {product?.name}
         </div>
 
         {/* Quantity */}
         <div className="text-gray-500 text-xs mt-0.5">
-          {product.attributes?.weight || ""}
+          {product?.attributes?.weight || ""}
         </div>
 
         {/* Price + Add Button */}
         <div className="flex justify-between items-center mt-2">
           <div className="flex flex-col">
             <span className="font-semibold text-lg text-gray-800">
-              ₹{product.price}
+              ₹{product?.price}
             </span>
             {hasDiscount && (
               <span className="text-gray-400 text-xs line-through">
-                ₹{product.oldPrice}
+                ₹{product?.oldPrice}
               </span>
             )}
           </div>

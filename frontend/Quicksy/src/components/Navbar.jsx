@@ -1,25 +1,23 @@
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { ShoppingCart, MapPin, Menu, X } from "lucide-react";
 import { Link, Navigate } from "react-router-dom"; // Use react-router-dom instead of react-router
 import { selectIsAuthenticated } from "../store/authSlice";
 import { useSelector } from "react-redux";
-
+import {  useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
-  
-  const handleSearchChange = (e) => {
-    e.preventDefault();
-  if (searchQuery.trim()) {
-    Navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
-  }
-  };
 
-  
 
+  useEffect(() => {
+    if (searchQuery.trim() !== "") {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  }, [searchQuery, navigate]);
 
   return (
     <nav className="w-full bg-white shadow-sm sticky top-0 z-50">
@@ -79,11 +77,13 @@ function Navbar() {
             </Link>
           )}
 
-         {isAuthenticated&&( <Link to="/profile" className="block w-full">
-            <button className="w-full px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition cursor-pointer">
-              Profile
-            </button>
-          </Link>)}
+          {isAuthenticated && (
+            <Link to="/profile" className="block w-full">
+              <button className="w-full px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition cursor-pointer">
+                Profile
+              </button>
+            </Link>
+          )}
 
           {/* Cart Button */}
           <Link to="/cart">
