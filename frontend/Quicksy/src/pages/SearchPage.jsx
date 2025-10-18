@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import React, { useEffect, useState, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 
 // Optional: use a loader spinner
@@ -12,22 +12,10 @@ const SearchPage = () => {
   const [error, setError] = useState(null);
 
   const queryParam = new URLSearchParams(location.search);
+
   const query = queryParam.get("q")?.trim() || "";
 
-  // Debounce: delay search until user stops typing for 300ms
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (query.length > 2) {
-        fetchSearchResults();
-      } else {
-        setSearchResults([]);
-      }
-    }, 300);
-
-    return () => clearTimeout(delayDebounce);
-  }, [query]);
-
-  const fetchSearchResults = async () => {
+  const fetchSearchResults = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -47,7 +35,20 @@ const SearchPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [query]);
+
+  // Debounce: delay search until user stops typing for 300ms
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (query.length > 2) {
+        fetchSearchResults();
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [query, fetchSearchResults]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">

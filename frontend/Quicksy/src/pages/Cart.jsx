@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Plus, Minus, Trash2, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { Link } from "react-router";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -70,7 +71,7 @@ function Cart() {
       await axios.delete(`http://localhost:7777/api/v1/cart/${id}`, {
         withCredentials: true,
       });
-      setCartItems((prev) => prev.filter((item) => item.id !== id));
+      setCartItems((prev) => prev.filter((item) => item?.id !== id));
     } catch (err) {
       console.error("Error deleting item:", err);
     } finally {
@@ -80,9 +81,9 @@ function Cart() {
 
   // ================= CALCULATIONS =================
   const subTotal = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + item?.product?.price * item?.quantity,
     0
-  );
+  );  
   const deliveryCharge = subTotal > 499 ? 0 : 49;
   const gst = (subTotal * 0.05).toFixed(2);
   const discount = subTotal > 999 ? subTotal * 0.05 : 0; // 5% discount
@@ -125,35 +126,37 @@ function Cart() {
                 key={item.id}
                 className="flex flex-col sm:flex-row justify-between bg-white border border-gray-100 shadow-sm rounded-xl p-4"
               >
+                <Link to={"/product/" + item?.product?._id} className="flex-1">
                 <div className="flex gap-4">
                   <img
-                    src={item.product.images?.[0] || "/default-product.png"}
-                    alt={item.product.name}
+                    src={item?.product?.images?.[0] || "/default-product.png"}
+                    alt={item?.product?.name}
                     className="w-20 h-20 rounded-lg object-cover"
                   />
                   <div>
 
                     <h3 className="text-lg font-semibold text-gray-800">
-                      {item.product.name}
+                      {item?.product?.name}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      ₹{item.product.price.toFixed(2)} per item
+                      ₹{item?.product?.price.toFixed(2)} per item
                     </p>
                     <p className="text-sm text-gray-500 mt-1">
                       Total:{" "}
                       <span className="font-semibold text-gray-800">
-                        ₹{(item.product.price * item.quantity).toFixed(2)}
+                        ₹{(item?.product?.price * item?.quantity).toFixed(2)}
                       </span>
                     </p>
                   </div>
                 </div>
+                </Link>
 
                 {/* Quantity + Delete */}
                 <div className="flex items-center gap-4 mt-3 sm:mt-0">
                   <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                     <button
                       onClick={() => decreaseQuantity(item?._id)}
-                      disabled={updating === item.id || item.quantity <= 1}
+                      disabled={updating === item?._id || item?.quantity <= 1}
                       className="px-2 py-1 text-gray-700 hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
                     >
                       <Minus className="w-4 h-4" />
@@ -163,7 +166,7 @@ function Cart() {
                     </span>
                     <button
                       onClick={() => increaseQuantity(item?._id)}
-                      disabled={updating === item._id}
+                      disabled={updating === item?._id}
                       className="px-2 py-1 text-gray-700 hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
                     >
                       <Plus className="w-4 h-4" />
@@ -171,8 +174,8 @@ function Cart() {
                   </div>
 
                   <button
-                    onClick={() => deleteItem(item.id)}
-                    disabled={updating === item.id}
+                    onClick={() => deleteItem(item?.id)}
+                    disabled={updating === item?.id}
                     className="text-red-600 hover:text-red-700 transition" 
                   >
                     <Trash2 className="w-5 h-5" />

@@ -6,7 +6,6 @@ import axios from "axios";
 function ProductCard({ product }) {
   const hasDiscount = product?.oldPrice && product?.oldPrice > product?.price;
   
-  console.log("Product in ProductCard:", product);
 
   const handleAddToCart = async(e) => {
     e.preventDefault(); // Prevent navigating to product page
