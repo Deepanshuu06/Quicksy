@@ -15,7 +15,7 @@ import {
 import axios from "axios";
 
 const Dashboard = () => {
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
   const [activeOrders, setActiveOrders] = useState([]);
   const [last24HoursOrders, setLast24HoursOrders] = useState([]);
