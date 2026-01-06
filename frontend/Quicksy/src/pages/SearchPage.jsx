@@ -13,7 +13,7 @@ const SearchPage = () => {
 
   const queryParam = new URLSearchParams(location.search);
 
-  const query = queryParam.get("q")?.trim() || "";
+  const query = queryParam.get("q")?.trim() || "";  
 
   const fetchSearchResults = useCallback(async () => {
     setLoading(true);

@@ -31,16 +31,27 @@ function Cart() {
   // Quantity Increase
   const increaseQuantity = async (id) => {
     try {
-      console.log("Increasing quantity for item:", id);
+
       setUpdating(id);
+      setCartItems((prev) =>
+      prev.map((item) =>
+        item._id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
       await axios.patch(
         `http://localhost:7777/api/v1/cart/${id}/increment`,
         {},
         { withCredentials: true }
       );
-      await fetchCartItems();
+
     } catch (err) {
       console.error("Error increasing quantity:", err);
+      setCartItems((prev) =>
+      prev.map((item) =>
+        item._id === id ? { ...item, quantity: item.quantity - 1 } : item
+      )
+    );
+      toast.error(err?.response?.data?.message || "Error increasing quantity");
     } finally {
       setUpdating(null);
     }
@@ -50,15 +61,28 @@ function Cart() {
   const decreaseQuantity = async (id) => {
     try {
       setUpdating(id);
+
+        setCartItems((prev) =>
+      prev.map((item) =>
+        item._id === id ? { ...item, quantity: item.quantity - 1 } : item
+      )
+    );
+
+
       await axios.patch(
         `http://localhost:7777/api/v1/cart/${id}/decrement`,
         {},
         { withCredentials: true }
       );
-      await fetchCartItems();
+
     } catch (err) {
       console.error("Error decreasing quantity:", err);
       toast.error(err?.response?.data?.message || "Error decreasing quantity");
+      setCartItems((prev) =>
+      prev.map((item) =>
+        item._id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
     } finally {
       setUpdating(null);
     }
@@ -68,10 +92,13 @@ function Cart() {
   const deleteItem = async (id) => {
     try {
       setUpdating(id);
-      await axios.delete(`http://localhost:7777/api/v1/cart/${id}`, {
+      console.log("Deleting item:", id);
+      await axios.delete(`http://localhost:7777/api/v1/cart/${id}`,{
         withCredentials: true,
       });
-      setCartItems((prev) => prev.filter((item) => item?.id !== id));
+
+    setCartItems((prev) => prev.filter((item) => item._id !== id));
+       await fetchCartItems();
     } catch (err) {
       console.error("Error deleting item:", err);
     } finally {
@@ -155,8 +182,14 @@ function Cart() {
                 <div className="flex items-center gap-4 mt-3 sm:mt-0">
                   <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                     <button
-                      onClick={() => decreaseQuantity(item?._id)}
-                      disabled={updating === item?._id || item?.quantity <= 1}
+                      onClick={() => {
+                        if(item?.quantity > 1) {
+                          decreaseQuantity(item?._id)
+                        }else{
+                          deleteItem(item?._id)
+                        }
+                      }}
+                      disabled={updating === item?._id }
                       className="px-2 py-1 text-gray-700 hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
                     >
                       <Minus className="w-4 h-4" />

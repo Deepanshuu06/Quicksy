@@ -57,7 +57,6 @@ exports.removeCartItem = async (req, res, next) => {
   try {
     const user = req.user;
     const { itemId } = req.params;
-
     if (!itemId) {
       throw new ApiError(400, "Item ID is required");
     }
