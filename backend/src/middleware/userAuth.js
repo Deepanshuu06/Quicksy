@@ -4,7 +4,6 @@ const { ApiError } = require("../utils/apiError");
 const userAuth = async (req, res, next) => {
   try {
     const token = req.cookies.token;
-
     if (!token) {
       res.clearCookie("token");
       throw new ApiError(401, "Unauthorized");
@@ -19,7 +18,6 @@ const userAuth = async (req, res, next) => {
     if (!user) {
       throw new ApiError(401, "Unauthorized");
     }
-
     req.user = user;
     next();
   } catch (error) {
