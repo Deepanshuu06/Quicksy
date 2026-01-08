@@ -7,8 +7,6 @@ export default function PrivateRoute({ children }) {
   const authStatus = useSelector(selectAuthStatus);
 
 
-
-
   if (authStatus === "loading" && authStatus === "idle") {
     return <div>Loading...</div>; // Or your spinner component
   }

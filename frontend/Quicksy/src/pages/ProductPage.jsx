@@ -12,8 +12,7 @@ const ProductPage = () => {
   const [added, setAdded] = useState(false);
   const [simitarProducts, setSimilarProducts] = useState([]);
 
-console.log(product)
-console.log(simitarProducts)
+
   useEffect(() => {
     async function fetchProduct() {
       try {
@@ -57,6 +56,7 @@ console.log(simitarProducts)
       setAdded(true);
       setTimeout(() => setAdded(false), 2000);
     } catch (error) {
+       toast.error("Login to add product to cart!");
       console.error("Error adding to cart:", error);
     }
   };

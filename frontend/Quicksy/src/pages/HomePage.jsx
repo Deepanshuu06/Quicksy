@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { Link } from "react-router";
 import ProductCard from "../components/ProductCard";
+import HomeShimmer from "../components/HomeShimmer";
 
 function HomePage() {
   const [categories, setCategories] = React.useState([]);
@@ -28,7 +29,7 @@ function HomePage() {
     fetchCategories();
   }, []);
 
-  return (
+  return categories.length > 0 ? (
     <div className="bg-gray-50 pb-16">
       <div className="max-w-7xl mx-auto px-4 py-4 hidden md:block lg:block">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -138,7 +139,7 @@ function HomePage() {
 
 
     </div>
-  );
+  ) : <HomeShimmer /> ;
 }
 
 export default HomePage;

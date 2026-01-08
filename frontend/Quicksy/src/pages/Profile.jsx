@@ -17,6 +17,7 @@ import {
 function Profile() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -70,8 +71,7 @@ function Profile() {
         <p className="text-center">Session expired or no profile found.</p>
         <button
           onClick={() => navigate("/login")}
-          className="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition"
-        >
+          className="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition">
           Login Again
         </button>
       </div>
@@ -131,9 +131,10 @@ function Profile() {
               {userData.addresses.map((addr, i) => (
                 <div
                   key={i}
-                  className="p-4 border border-gray-200 rounded-xl bg-gray-50"
-                >
-                  <p className="font-medium text-gray-800">{addr.label || "Home"}</p>
+                  className="p-4 border border-gray-200 rounded-xl bg-gray-50">
+                  <p className="font-medium text-gray-800">
+                    {addr.label || "Home"}
+                  </p>
                   <p className="text-gray-600 text-sm mt-1">
                     {addr.street}, {addr.city}, {addr.state} - {addr.zipCode}
                   </p>
@@ -142,10 +143,102 @@ function Profile() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">No saved addresses yet.</p>
+            <div className="flex flex-col items-start">
+              <p className="text-gray-500">No saved addresses yet.</p>
+              <button className="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition" onClick={() => setIsAddressModalOpen(true)}>
+                {" "}
+                Add Address{" "}
+              </button>
+            </div>
           )}
         </div>
 
+        {isAddressModalOpen && (
+          <div className="fixed inset-0 bg-transparent   flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
+              <button
+                onClick={() => setIsAddressModalOpen(false)}
+                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+                &times;
+              </button>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                Add New Address
+              </h2>
+              {/* Address Form */}
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Label
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g., Home, Work"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Street Address
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="123 Main St"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="City"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      State
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="State"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      ZIP Code
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="ZIP Code"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Country"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                  Save Address
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
         {/* Orders Section */}
         <div>
           <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
@@ -156,8 +249,7 @@ function Profile() {
               {userData.orders.map((order, i) => (
                 <div
                   key={i}
-                  className="p-4 border border-gray-200 rounded-xl bg-gray-50 hover:shadow-sm transition"
-                >
+                  className="p-4 border border-gray-200 rounded-xl bg-gray-50 hover:shadow-sm transition">
                   <p className="text-gray-700">
                     <span className="font-semibold">Order ID:</span> {order.id}
                   </p>
@@ -168,8 +260,7 @@ function Profile() {
                         order.orderStatus === "Delivered"
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
+                      }`}>
                       {order.orderStatus}
                     </span>
                   </p>
@@ -193,8 +284,7 @@ function Profile() {
         <div className="text-center pt-4">
           <button
             onClick={handleLogout}
-            className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-2.5 rounded-lg hover:bg-red-700 transition"
-          >
+            className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-2.5 rounded-lg hover:bg-red-700 transition">
             <LogOut className="w-4 h-4" /> Logout
           </button>
         </div>
