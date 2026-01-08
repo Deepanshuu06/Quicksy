@@ -71,7 +71,7 @@ function Navbar() {
           {/* Login Button (hidden on xs) */}
           {!isAuthenticated && (
             <Link to="/login" className="hidden sm:block">
-              <button className="px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition">
+              <button className="px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition cursor-pointer">
                 Login
               </button>
             </Link>
@@ -87,7 +87,7 @@ function Navbar() {
 
           {/* Cart Button */}
           <Link to="/cart">
-            <button className="relative flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+            <button className="relative flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition cursor-pointer">
               <ShoppingCart className="h-5 w-5 mr-2" />
               <span className="font-medium text-sm hidden sm:inline">Cart</span>
               <span className="absolute -top-2 -right-2 bg-white text-green-600 text-xs rounded-full px-2 py-0.5 font-bold shadow-md">

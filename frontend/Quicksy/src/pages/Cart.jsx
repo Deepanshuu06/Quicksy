@@ -133,11 +133,11 @@ function Cart() {
       </h1>
 
       {cartItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-[70vh] text-gray-500">
+        <div className="flex flex-col items-center justify-center h-[50vh] text-gray-500">
           <img
-            src="/empty-cart.png"
+            src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-illustration-svg-download-png-1800917.png"
             alt="Empty Cart"
-            className="w-44 h-44 opacity-80 mb-5"
+            className=" h-44 opacity-80 mb-5"
           />
           <p className="text-lg font-medium">Your cart is empty</p>
           <p className="text-sm text-gray-400 mt-1">

@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { selectIsAuthenticated } from "../store/authSlice";
 import { useSelector } from "react-redux";
 import { setCredentials } from "../store/authSlice";
@@ -94,12 +94,11 @@ function LoginPage() {
           {/* Signup / Forgot Links */}
           <div className="text-sm text-center text-gray-600 mt-4">
             <p>
-              Don’t have an account?{" "}
-              <a
-                href="/register"
-                className="text-green-600 font-medium hover:underline">
-                Sign up
-              </a>
+              Don’t have an account? {" "}
+             
+              <Link to="/register">
+              <p className="text-green-600 font-medium hover:underline"> Sign up</p>
+              </Link>
             </p>
             <p className="mt-2">
               <a

@@ -40,7 +40,6 @@ async function startServer() {
   try {
     await connectDB();
     console.log("Database connection established...");
-
     app.listen(PORT, () => {
       console.log(`App successfully running on port ${PORT}`);
     });

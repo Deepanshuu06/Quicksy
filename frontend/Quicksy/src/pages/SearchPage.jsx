@@ -15,6 +15,8 @@ const SearchPage = () => {
 
   const query = queryParam.get("q")?.trim() || "";  
 
+
+
   const fetchSearchResults = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -52,9 +54,9 @@ const SearchPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <h2 className="text-2xl font-semibold mb-4">
+      {query && <h2 className="text-xl font-semibold mb-4">
         Search results for: <span className="text-green-600">"{query}"</span>
-      </h2>
+      </h2>}
 
       {loading && (
         <p className="text-gray-600">Loading results...</p>

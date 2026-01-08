@@ -11,12 +11,15 @@ const ProductPage = () => {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
+
+  console.log("Product ID:", product);
   useEffect(() => {
     async function fetchProduct() {
       try {
         const res = await axios.get(
           `http://localhost:7777/api/v1/public/product/${id}`
         );
+      
         setProduct(res?.data?.data?.product || null);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -107,20 +110,20 @@ const ProductPage = () => {
             <div className="flex border border-gray-300 rounded-md overflow-hidden w-fit">
               <button
                 onClick={() => setQty((prev) => Math.max(1, prev - 1))}
-                className="px-3 py-1 text-gray-700 hover:bg-gray-100 text-lg">
+                className="px-3 py-1 text-gray-700 hover:bg-gray-100 text-lg cursor-pointer">
                 –
               </button>
               <span className="px-4 py-1 text-gray-800">{qty}</span>
               <button
                 onClick={() => setQty((prev) => prev + 1)}
-                className="px-3 py-1 text-gray-700 hover:bg-gray-100 text-lg">
+                className="px-3 py-1 text-gray-700 hover:bg-gray-100 text-lg cursor-pointer">
                 +
               </button>
             </div>
 
             <button
               onClick={() => handleAddToCart(product)}
-              className={`px-6 py-2 rounded-md font-medium transition text-white ${
+              className={`px-6 py-2 rounded-md font-medium transition text-white cursor-pointer ${
                 added ? "bg-green-400" : "bg-green-600 hover:bg-green-700"
               }`}>
               {added ? "Added!" : "Add to Cart"}
@@ -156,6 +159,11 @@ const ProductPage = () => {
           }`}>
           {added ? "Added!" : "Add to Cart"}
         </button>
+      </div>
+
+      <div className="mt-12 ">
+        <h2 className="text-xl font-semibold text-gray-800">Similar products</h2>
+        
       </div>
     </div>
   );
