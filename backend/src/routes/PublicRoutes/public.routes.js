@@ -10,4 +10,5 @@ router.get("/search", publicController.searchProducts);
 router.get("/product/:id", publicController.getProductById);
 
 
+
 module.exports = router;

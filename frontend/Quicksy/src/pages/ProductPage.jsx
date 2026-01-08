@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -10,17 +10,31 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [simitarProducts, setSimilarProducts] = useState([]);
 
-
-  console.log("Product ID:", product);
+console.log(product)
+console.log(simitarProducts)
   useEffect(() => {
     async function fetchProduct() {
       try {
         const res = await axios.get(
           `http://localhost:7777/api/v1/public/product/${id}`
         );
-      
         setProduct(res?.data?.data?.product || null);
+        const similarRes = await axios.get(
+          "http://localhost:7777/api/v1/public/products",
+          {
+            params: {
+              categoryId: res?.data?.data?.product?.category,
+              limit: 4,
+            },
+          }
+        );
+       
+        const filteredSimilarProducts = (similarRes?.data?.data?.products || []).filter(
+          (prod) => prod._id !== res?.data?.data?.product?._id
+        );
+        setSimilarProducts(filteredSimilarProducts);
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {
@@ -32,9 +46,13 @@ const ProductPage = () => {
 
   const handleAddToCart = async (product) => {
     try {
-      await axios.post("http://localhost:7777/api/v1/cart", { productId: product._id }, {
-        withCredentials: true,
-      });
+      await axios.post(
+        "http://localhost:7777/api/v1/cart",
+        { productId: product._id },
+        {
+          withCredentials: true,
+        }
+      );
       toast.success("Product added to cart!");
       setAdded(true);
       setTimeout(() => setAdded(false), 2000);
@@ -162,8 +180,48 @@ const ProductPage = () => {
       </div>
 
       <div className="mt-12 ">
-        <h2 className="text-xl font-semibold text-gray-800">Similar products</h2>
-        
+        <h2 className="text-xl font-semibold text-gray-800">
+          Similar products
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-6">
+          {simitarProducts.length === 0 && (
+            <p className="text-gray-600 col-span-full">
+              No similar products found.
+            </p>
+          )}
+          {simitarProducts.map((prod) => (
+            <Link to={`/product/${prod._id}`} key={prod._id}>
+            <div
+              key={prod._id}
+              className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col hover:shadow-md transition cursor-pointer">
+              <img
+                src={prod.images[0]}
+                alt={prod.name}
+                className="w-full h-32 object-contain mb-4"
+              />
+              <h3 className="text-sm font-medium text-gray-800 mb-2">
+                {prod.name}
+              </h3>
+              <div className="mt-auto">
+                <span className="text-lg font-semibold text-gray-800">
+                  ₹{prod.price}
+                </span>
+                {prod.mrp && prod.mrp > prod.price && ( <>
+                  <span className="line-through text-sm text-gray-400 ml-2">
+                    ₹{prod.mrp}
+                  </span>
+                  <span className="text-green-600 text-sm font-semibold ml-2">
+                    {Math.round(
+                      ((prod.mrp - prod.price) / prod.mrp) * 100
+                    )}
+                    % OFF
+                  </span>
+                </>)}
+              </div>
+            </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

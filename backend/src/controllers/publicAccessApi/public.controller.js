@@ -51,13 +51,16 @@ exports.getCategories = async (req, res, next) => {
 };
 exports.getProductsByCategory = async (req, res, next) => {
   try {
-    const { categoryId } = req.query;
+    const { categoryId , limit } = req.query;
     if (!categoryId) {
       throw new ApiError(400, "Category ID is required");
     }
     const category = await Category.findById(categoryId).populate("products");
     if (!category) {
       throw new ApiError(404, "Category not found");
+    }
+    if(limit){
+      category.products = category.products.slice(0, parseInt(limit));
     }
     const products = category.products || [];
     const response = new ApiResponse(200, "Products fetched successfully", {
