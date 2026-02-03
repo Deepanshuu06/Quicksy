@@ -213,9 +213,9 @@ const deleteItem = async (id) => {
                   </div>
 
                   <button
-                    onClick={() => deleteItem(item?.id)}
+                    onClick={() => deleteItem(item?._id)}
                     disabled={updating === item?.id}
-                    className="text-red-600 hover:text-red-700 transition" 
+                    className="text-red-600 hover:text-red-700 transition cursor-pointer" 
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>

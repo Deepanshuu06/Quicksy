@@ -14,7 +14,7 @@ function App() {
   }, [dispatch]);
 
    if (authStatus === "loading" || authStatus === "idle") {
-    return <div>Loading app...</div>; // Optional loading screen
+    return <div></div>; 
   }
 
   return (

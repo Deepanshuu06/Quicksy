@@ -1,22 +1,25 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-
-// Optional: use a loader spinner
-// import Loader from "../components/Loader";
 
 const SearchPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Read query from URL
   const queryParam = new URLSearchParams(location.search);
+  const rawQuery = queryParam.get("q");
+  const query = rawQuery?.trim() || "";
 
-  const query = queryParam.get("q")?.trim() || "";  
+  const isValidQuery = query.length >= 2;
 
 
 
+  // 🔹 Fetch search results
   const fetchSearchResults = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -34,42 +37,61 @@ const SearchPage = () => {
       setSearchResults(data?.data?.products || []);
     } catch (err) {
       setError(err.message || "Something went wrong.");
+      setSearchResults([]);
     } finally {
       setLoading(false);
     }
   }, [query]);
 
-  // Debounce: delay search until user stops typing for 300ms
+  // 🔹 Debounce search
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (query.length > 2) {
+    const timeout = setTimeout(() => {
+      if (isValidQuery) {
         fetchSearchResults();
       } else {
         setSearchResults([]);
       }
     }, 300);
 
-    return () => clearTimeout(delayDebounce);
-  }, [query, fetchSearchResults]);
+    return () => clearTimeout(timeout);
+  }, [query, isValidQuery, fetchSearchResults]);
+
+  // 🔹 Clean URL when query is too short
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+
+    if (!isValidQuery && params.has("q")) {
+      params.delete("q");
+
+      navigate(
+        {
+          pathname: location.pathname,
+          search: params.toString(),
+        },
+        { replace: true }
+      );
+    }
+  }, [isValidQuery, location.pathname, location.search, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      {query && <h2 className="text-xl font-semibold mb-4">
-        Search results for: <span className="text-green-600">"{query}"</span>
-      </h2>}
-
-      {loading && (
-        <p className="text-gray-600">Loading results...</p>
-        // Or show a spinner here instead of text
-        // <Loader />
+      {isValidQuery && (
+        <h2 className="text-xl font-semibold mb-4">
+          Search results for:{" "}
+          <span className="text-green-600">"{query}"</span>
+        </h2>
       )}
+
+      {loading && <p className="text-gray-600">Loading results...</p>}
 
       {error && (
         <p className="text-red-600 bg-red-100 p-2 rounded">{error}</p>
       )}
 
-      {!loading && !error && searchResults.length === 0 && query.length > 2 && (
-        <p className="text-gray-600">No results found for "{query}"</p>
+      {!loading && !error && searchResults.length === 0 && isValidQuery && (
+        <p className="text-gray-600">
+          No results found for "{query}"
+        </p>
       )}
 
       <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
