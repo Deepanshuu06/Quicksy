@@ -58,53 +58,59 @@ function Cart() {
   };
 
   // Quantity Decrease
-  const decreaseQuantity = async (id) => {
-    try {
-      setUpdating(id);
+const decreaseQuantity = async (id) => {
+  try {
+    setUpdating(id);
 
-        setCartItems((prev) =>
+    // Optimistic UI update
+    setCartItems((prev) =>
       prev.map((item) =>
-        item._id === id ? { ...item, quantity: item.quantity - 1 } : item
+        item._id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
       )
     );
 
+    await axios.patch(
+      `http://localhost:7777/api/v1/cart/${id}/decrement`,
+      {},
+      { withCredentials: true }
+    );
+  } catch (err) {
+    console.error("Error decreasing quantity:", err);
+    toast.error(err?.response?.data?.message || "Error decreasing quantity");
 
-      await axios.patch(
-        `http://localhost:7777/api/v1/cart/${id}/decrement`,
-        {},
-        { withCredentials: true }
-      );
-
-    } catch (err) {
-      console.error("Error decreasing quantity:", err);
-      toast.error(err?.response?.data?.message || "Error decreasing quantity");
-      setCartItems((prev) =>
+    // Rollback on error
+    setCartItems((prev) =>
       prev.map((item) =>
         item._id === id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
-    } finally {
-      setUpdating(null);
-    }
-  };
+  } finally {
+    setUpdating(null);
+  }
+};
 
-  // Delete Cart Item
-  const deleteItem = async (id) => {
-    try {
-      setUpdating(id);
-      console.log("Deleting item:", id);
-      await axios.delete(`http://localhost:7777/api/v1/cart/${id}`,{
-        withCredentials: true,
-      });
+// Delete Cart Item 
+const deleteItem = async (id) => {
+  try {
+    setUpdating(id);
 
+    await axios.delete(
+      `http://localhost:7777/api/v1/cart/${id}`,
+      { withCredentials: true }
+    );
+
+    // Single state update = single rerender
     setCartItems((prev) => prev.filter((item) => item._id !== id));
-       await fetchCartItems();
-    } catch (err) {
-      console.error("Error deleting item:", err);
-    } finally {
-      setUpdating(null);
-    }
-  };
+  } catch (err) {
+    console.error("Error deleting item:", err);
+    toast.error(err?.response?.data?.message || "Error deleting item");
+  } finally {
+    setUpdating(null);
+  }
+};
+
 
   // ================= CALCULATIONS =================
   const subTotal = cartItems.reduce(
